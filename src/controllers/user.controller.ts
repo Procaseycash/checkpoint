@@ -74,7 +74,7 @@ export class UserController {
     }
 
     @ApiOAuth2Auth()
-    @Roles(UserEnum.SYSADMIN)
+    @Roles(UserEnum.SYSADMIN, UserEnum.CLIENT_USER)
     @Get(':id')
     async fetchAUser(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.userService.getUserById(id);
