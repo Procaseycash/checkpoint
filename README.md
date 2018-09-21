@@ -59,11 +59,11 @@ $ export NODE_ENV=development
 ### Application Running ports
 You can change the below port from `src/config/app.config.ts`. 
 ```$xslt
-Test: 4002 
+Test: 6002 
     
-Production: 4001
+Production: 6001
     
-Development: 4000
+Development: 6000
 ```
 ### Run a Build Version
 
