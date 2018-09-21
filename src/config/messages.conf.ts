@@ -1,17 +1,9 @@
 export const messages = {
-    riskTools: 'Successfully listed all risk tools',
     invalidURL: 'Invalid URL',
     moreThanOne: 'General Multiplier cannot be more than one',
     operationFailed: 'Failed to perform operation, please try again.',
     querySearched: 'Query searched was success',
-    riskToolCreated: 'Risk Tool was successfully created',
-    riskToolUpdated: 'Risk Tool was successfully updated',
     notAllowedToDelete: 'You are not eligible to perform this operation',
-    dataPointCreated: 'Data point was successfully created',
-    dataPointUpdated: 'Data point  was successfully updated',
-    dataPoints: 'Successfully listed all data points',
-    dataPointsFetchOne: 'Data point fetched successfully',
-    riskToolFetchOne: 'Risk Service fetched successfully',
     logoutFailed: 'Failed to logout, please try again',
     newPasswordGen: 'New Password Generated, Please check your inbox or spam to retrieve a new logon password.',
     sessionDeactive: 'Session deactivated successfully, Please check your inbox or spam to retrieve a new logon password.',
@@ -42,8 +34,6 @@ export const messages = {
     notAuthorized: 'You are not authorized to have access to this resource',
     notAuthorizedPerform: 'You are not authorized to have perform this operation',
     notOrganizationUser: 'This consumer does not belong to your organization.',
-    notBillerOrganization: 'This Organization does not belong to you.',
-    notBillerOrganizationItem: 'This item does not belong to your organization.',
     authorizationError: 'Unable to verify user credentials',
     notAccount: 'This account does not exist or match account we found',
     unassign: 'You cannot unassign selected information due to its usage by one or more resources',
@@ -53,9 +43,6 @@ export const messages = {
     failedToDelete: 'Delete Operation Failed.',
     deleteSuccess: 'This information was successfully deleted',
     userDelete: 'User deleted successfully.',
-    accountDelete: 'Account deleted successfully.',
-    orgDelete: 'Organization deleted successfully.',
-    itemtDelete: 'Item deleted successfully.',
     toggle: 'Toggling was successfully',
     base64: 'Invalid base64 in file sent',
     emailExist: 'Email already exist',
@@ -64,48 +51,6 @@ export const messages = {
     auth: {
         success: 'Login was successful',
         failed: 'Invalid login',
-    },
-    categories: {
-        fetchOne: 'Category fetched successfully',
-        create: {
-            success: 'Categories was successfully created',
-            failed: 'Failed while creating item(s)',
-        },
-        update: {
-            success: 'Categories was successfully updated',
-            failed: 'Failed while updating item(s)',
-        },
-        list: {
-            success: 'Categories listed was successful',
-            failed: 'No data found',
-        },
-        assign: {
-            failed: 'Unable to assign groups/payment lines to Category',
-            groups: 'Groups was successfully assigned',
-            paymentLines: 'Payment lines was successfully assigned',
-            success: 'Groups/Payment lines was successfully assigned',
-        },
-        unassign: {
-            failed: 'Unable to assign groups/payment lines to Category',
-            groups: 'Groups was successfully deleted',
-            paymentLines: 'Payment lines was successfully deleted',
-            success: 'Groups/Payment lines was successfully deleted',
-        },
-    },
-    services: {
-        fetchOne: 'Service fetched successfully',
-        create: {
-            success: 'Services was successfully created',
-            failed: 'Failed while creating item(s)',
-        },
-        update: {
-            success: 'Services was successfully updated',
-            failed: 'Failed while updating item(s)',
-        },
-        list: {
-            success: 'Services listed was successful',
-            failed: 'No data found',
-        },
     },
     users: {
         created: 'User successfully created',
@@ -140,6 +85,7 @@ export const messages = {
         extension: 'Invalid File Extension',
         file_name: 'Invalid File name',
     },
+    keyNotFound: 'Key not Found',
     storage: {
         notFound: 'Cannot remove unknown key in file storage',
     },

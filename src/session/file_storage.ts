@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import {NotFoundException} from '@nestjs/common';
-import {messages} from '../config/messages';
+import {messages} from '../config/messages.conf';
 import * as path from 'path';
 
 export class FileStorage {
@@ -34,11 +34,8 @@ export class FileStorage {
         try {
             const stringBuffer = (fs.readFileSync(FileStorage.filePath + '/' + 'file_storage.json')).toString();
             FileStorage.data = JSON.parse(stringBuffer);
-            if (!(FileStorage.data && FileStorage.data[key])) {
-                return null;
-            } else {
-                return FileStorage.data[key];
-            }
+            if (!(FileStorage.data && FileStorage.data[key])) return null;
+            return FileStorage.data[key];
         } catch (e) {
             throw new NotFoundException(e.message);
         }
@@ -53,14 +50,11 @@ export class FileStorage {
         try {
             const stringBuffer = (fs.readFileSync(FileStorage.filePath + '/' + 'file_storage.json')).toString();
             FileStorage.data = JSON.parse(stringBuffer);
-            if (!(FileStorage.data && FileStorage.data[key])) {
-                throw new NotFoundException(messages.storage.notFound);
-            } else {
-                FileStorage.data[key] = null;
-                console.log('fileStorage=', FileStorage.data);
-                fs.writeFileSync(FileStorage.filePath + '/' + 'file_storage.json', JSON.stringify(FileStorage.data));
-                return true;
-            }
+            if (!(FileStorage.data && FileStorage.data[key])) throw new NotFoundException(messages.storage.notFound);
+            FileStorage.data[key] = null;
+            console.log('fileStorage=', FileStorage.data);
+            fs.writeFileSync(FileStorage.filePath + '/' + 'file_storage.json', JSON.stringify(FileStorage.data));
+            return true;
         } catch (e) {
             throw new NotFoundException(e.message);
         }
@@ -85,18 +79,11 @@ export class FileStorage {
      * @returns {boolean}
      */
     protected static reset(key, data?: any) {
-        try {
-            const stringBuffer = (fs.readFileSync(FileStorage.filePath + '/' + 'file_storage.json')).toString();
-            FileStorage.data = JSON.parse(stringBuffer);
-            if (!(FileStorage.data && FileStorage.data[key])) {
-                throw new NotFoundException(messages.keyNotFound);
-            } else {
-                FileStorage.data[key] = data || '';
-                fs.writeFileSync(FileStorage.filePath + '/' + 'file_storage.json', JSON.stringify(FileStorage.data));
-                return true;
-            }
-        } catch (e) {
-            throw new NotFoundException(e.message);
-        }
+        const stringBuffer = (fs.readFileSync(FileStorage.filePath + '/' + 'file_storage.json')).toString();
+        FileStorage.data = JSON.parse(stringBuffer);
+        if (!(FileStorage.data && FileStorage.data[key])) throw new NotFoundException(messages.keyNotFound);
+        FileStorage.data[key] = data || '';
+        fs.writeFileSync(FileStorage.filePath + '/' + 'file_storage.json', JSON.stringify(FileStorage.data));
+        return true;
     }
 }
