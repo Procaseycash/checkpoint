@@ -9,6 +9,8 @@ import {
 import {ServicesService} from '../services/services.service';
 import {DecodeEncryptedRequestInterceptor} from '../shared/interceptors/decode.encrypted.request.interceptor';
 import {HttpModule} from '@nestjs/common/http';
+import {ReqInstanceInterceptor} from "../shared/interceptors/req.instance.interceptor";
+import {SessionManagerInterceptor} from "../shared/interceptors/session.manager.interceptor";
 
 @Module({
     imports: [
@@ -22,7 +24,9 @@ import {HttpModule} from '@nestjs/common/http';
         ...searchHistoryRepo,
         ServicesService,
         HttpExceptionFilter,
+        ReqInstanceInterceptor,
         DecodeEncryptedRequestInterceptor,
+        SessionManagerInterceptor,
     ],
     exports: [
         ...loginInfoRepo,
@@ -31,6 +35,8 @@ import {HttpModule} from '@nestjs/common/http';
         HttpExceptionFilter,
         ServicesService,
         DecodeEncryptedRequestInterceptor,
+        ReqInstanceInterceptor,
+        SessionManagerInterceptor,
         DbModule,
     ],
     controllers: [ServicesController],

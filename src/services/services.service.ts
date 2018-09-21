@@ -21,6 +21,7 @@ import {SearchHistory} from '../models/search_history';
 import {isWebUri} from 'valid-url';
 import {UserService} from './user.service';
 import {ReqInstance} from '../shared/interceptors/req.instance';
+import {Session} from "../session/session";
 
 @Component()
 export class ServicesService {
@@ -71,13 +72,14 @@ export class ServicesService {
         return true;
     }
 
-    async logActiveUser(req, data) {
+    async logActiveUser(req, data, token) {
+        await Session.redis.setAsync(`user:session:${data.ref_token}`, token, 'EX', +data['session_timeout']);
         const logger = await this.loginInfoRepo.create({
             _id: await getNextSequenceValue(this.counterRepo, modelCounter.loginInfo),
             user_id: data.id,
             ref_token: data.ref_token,
-            browser_agent: req.browser_agent,
-            ip_address: req.ip_address,
+            browser_agent: req.browser_agent || data.browser_agent,
+            ip_address: req.ip_address || data.ip_address,
         });
         if (!logger || !logger.id) throw new BadRequestException(messages.errorEncountered);
         return true;

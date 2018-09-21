@@ -1,9 +1,9 @@
 import {
-    Controller, Get, Req, Response, Request, Post, Param,
+    Controller, Get, Req, Headers, Response, Request, Post, Param,
     ParseIntPipe, Body, Put, Delete, Patch,
 } from '@nestjs/common';
 import {UserService} from '../services/user.service';
-import {ApiOperation, ApiUseTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiOAuth2Auth, ApiOperation, ApiUseTags} from '@nestjs/swagger';
 import {messages} from '../config/messages.conf';
 import {RestfulRes} from '../response/restful.res';
 import {UserUpdateReq} from '../requests/user.update.req';
@@ -37,9 +37,9 @@ export class UserController {
         return data ? RestfulRes.success(res, messages.users.list.success, data) : RestfulRes.error(res, messages.users.list.failed);
     }
 
+    @ApiOAuth2Auth(['test'])
     @Patch(':id/change_password')
-    async changePassword(@Response() res, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
-        console.log('id :: ', id);
+    async changePassword(@Response() res,  @Headers('Authorization') testHeader: string, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
         const data = await this.servicesService.changePassword(passwordSettings);
         return data ? RestfulRes.success(res, messages.passwordChanged, data) : RestfulRes.error(res, messages.passwordFailed);
     }

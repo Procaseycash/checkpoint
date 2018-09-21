@@ -15,6 +15,7 @@ import {modelCounter} from '../config/constants.conf';
 import {SearchHistory} from '../models/search_history';
 import {UserNotFoundException} from '../shared/filters/throwable.not.found';
 import {ReqInstance} from '../shared/interceptors/req.instance';
+import {sessionTimeoutPeriod} from "../config/app.config";
 
 @Component()
 export class UserService {
@@ -25,16 +26,20 @@ export class UserService {
                 @Inject('CounterRepo') private readonly counterRepo: Model<Counter>) {
     }
 
-    public async authenticate(req) {
+    private async processToken(data) {
+        data = deepCopy(data);
+        data['ref_token'] = faker.random.uuid();
+        data['session_timeout'] = await sessionTimeoutPeriod();
+        const token = jwt.sign(data);
+        await this.servicesService.logActiveUser(ReqInstance.req, data, token);
+        return token;
+    }
+
+    public async authenticate(user) {
         try {
-            let data = await this.userRepo.findOne({email: req.email});
-            if (!(data && data.email === req.email && password.verify(req.password, data.password))) return null;
-            data.password = undefined;
-            data = deepCopy(data);
-            data['ref_token'] = faker.random.uuid();
-            const token = jwt.sign(data);
-            await this.servicesService.logActiveUser(req, data);
-            return token;
+            const data = await this.userRepo.findOne({email: user.email});
+            if (!(data && data.email === user.email && password.verify(user.password, data.password))) return null;
+            return await this.processToken(data);
         } catch (e) {
             throw new BadRequestException(catchErrors.formatError(e));
         }
@@ -78,6 +83,11 @@ export class UserService {
 
     async getUserById(id: number) {
         return await this.userRepo.findOne({_id: id});
+    }
+
+    async getToken(id: number) {
+        const data = await this.getUserById(id);
+        return await this.processToken(data);
     }
 
     async findAll() {

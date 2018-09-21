@@ -6,12 +6,12 @@ import {jwt} from '../../utils/jwt';
 @Interceptor()
 export class ReqInstanceInterceptor implements NestInterceptor {
     intercept(dataOrRequest, context: ExecutionContext, call$: Observable<any>): Observable<any> {
-        ReqInstance.req = dataOrRequest();
+        ReqInstance.req = dataOrRequest;
         if (ReqInstance.req.body) Object.assign(ReqInstance.req, ReqInstance.req.body);
         if (ReqInstance.req.headers && ReqInstance.req.headers.authorization) {
             ReqInstance.req['user'] = jwt.decode(ReqInstance.req.headers.authorization);
         }
-        console.log('ReqInstance=', ReqInstance.req);
+        console.log('ReqInstance=', ReqInstance.req.headers);
         return call$;
     }
 }
