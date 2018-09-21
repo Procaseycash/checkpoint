@@ -25,7 +25,7 @@ export class UserService {
                 @Inject('CounterRepo') private readonly counterRepo: Model<Counter>) {
     }
 
-    async authenticate(req) {
+    public async authenticate(req) {
         try {
             let data = await this.userRepo.findOne({email: req.email});
             if (!(data && data.email === req.email && password.verify(req.password, data.password))) return null;
@@ -40,7 +40,7 @@ export class UserService {
         }
     }
 
-    private async create(user) {
+    public async create(user) {
         const existEmail = await this.userRepo.findOne({email: user.email});
         if (existEmail) throw new BadRequestException(messages.emailExist);
         if (!isValidPassword(user.password)) {
@@ -56,7 +56,7 @@ export class UserService {
         return await ((userPermission && userPermission.type === UserEnum.SYSADMIN) ? this.getUserById(user.id) : this.authenticate(userCopy));
     }
 
-    async update(user) {
+    public async update(user) {
         if (ReqInstance.req.user.id !== user.id) throw new UserNotFoundException();
         if (user['password']) user['password'] = undefined;
         if (user['email']) user['email'] = undefined;

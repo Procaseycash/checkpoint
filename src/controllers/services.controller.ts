@@ -21,13 +21,6 @@ export class ServicesController {
         return data ? RestfulRes.success(res, messages.list, data) : RestfulRes.error(res, messages.failed);
     }
 
-    @Patch('users/:id/change_password')
-    async changePassword(@Response() res, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
-        console.log('id :: ', id);
-        const data = await this.servicesService.changePassword(req, passwordSettings);
-        return data ? RestfulRes.success(res, messages.passwordChanged, data) : RestfulRes.error(res, messages.passwordFailed);
-    }
-
     @Post('account/logout')
     async logout(@Response() res, @Request() req, @Body() logoutReq: LogoutReq) {
         const user = jwt.decode(req.headers.authorization);
