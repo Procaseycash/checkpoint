@@ -1,0 +1,23 @@
+{
+  "development": {
+    "database": "checkout_db",
+    "password": null,
+    "username": null,
+    "host": "localhost",
+    "port": 27017
+  },
+  "test": {
+    "database": "checkout_db",
+    "password": "password1",
+    "username": "checkout_point",
+    "host": "ds121262.mlab.com",
+    "port": 21262
+  },
+  "production": {
+    "database": "checkout_db",
+    "password": "password1",
+    "username": "checkout_point",
+    "host": "ds121262.mlab.com",
+    "port": 21262
+  }
+}
