@@ -93,5 +93,23 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Procaseycash/checkpoint.git"
+  },
+  "keywords": [
+    "Notification",
+    "Angular",
+    "Alert",
+    "Pop"
+  ],
+  "author": "Kazeem Olanipekun <kezyolanipekun@gmail.com>",
+  "contributors": [
+    "Kazeem Olanipekun <kezyolanipekun@gmail.com>"
+  ],
+  "bugs": {
+    "url": "https://github.com/Procaseycash/checkpoint/issues"
+  },
+  "homepage": "https://github.com/Procaseycash/checkpoint#README"
 }

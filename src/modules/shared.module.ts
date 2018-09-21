@@ -5,7 +5,6 @@ import {UserModule} from './user.module';
 import {ServicesController} from '../controllers/services.controller';
 import {
     counterRepo, loginInfoRepo, searchHistoryRepo,
-    serviceRepo
 } from '../repos/models.repository';
 import {ServicesService} from '../services/services.service';
 import {DecodeEncryptedRequestInterceptor} from '../shared/interceptors/decode.encrypted.request.interceptor';
@@ -19,7 +18,6 @@ import {HttpModule} from '@nestjs/common/http';
     ],
     components: [
         ...loginInfoRepo,
-        ...serviceRepo,
         ...counterRepo,
         ...searchHistoryRepo,
         ServicesService,
@@ -28,7 +26,6 @@ import {HttpModule} from '@nestjs/common/http';
     ],
     exports: [
         ...loginInfoRepo,
-        ...serviceRepo,
         ...counterRepo,
         ...searchHistoryRepo,
         HttpExceptionFilter,
