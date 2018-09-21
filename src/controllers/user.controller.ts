@@ -37,9 +37,9 @@ export class UserController {
         return data ? RestfulRes.success(res, messages.users.list.success, data) : RestfulRes.error(res, messages.users.list.failed);
     }
 
-    @ApiOAuth2Auth(['test'])
+    @ApiOAuth2Auth()
     @Patch(':id/change_password')
-    async changePassword(@Response() res,  @Headers('Authorization') testHeader: string, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
+    async changePassword(@Response() res,  @Headers('Authorization') authorization: string, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
         const data = await this.servicesService.changePassword(passwordSettings);
         return data ? RestfulRes.success(res, messages.passwordChanged, data) : RestfulRes.error(res, messages.passwordFailed);
     }
