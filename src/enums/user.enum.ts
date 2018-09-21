@@ -1,4 +1,4 @@
 export enum UserEnum {
     SYSADMIN = 'SYSADMIN',
-    QUERER = 'QUERER',
+    CLIENT_USER = 'CLIENT_USER',
 }

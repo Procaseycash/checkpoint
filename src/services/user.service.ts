@@ -45,7 +45,8 @@ export class UserService {
         }
     }
 
-    public async create(user) {
+    public async create(user, type) {
+        user.type = type;
         const existEmail = await this.userRepo.findOne({email: user.email});
         if (existEmail) throw new BadRequestException(messages.emailExist);
         if (!isValidPassword(user.password)) {
@@ -65,6 +66,7 @@ export class UserService {
         if (ReqInstance.req.user.id !== user.id) throw new UserNotFoundException();
         if (user['password']) user['password'] = undefined;
         if (user['email']) user['email'] = undefined;
+        if (user['type']) user['type'] = undefined;
         user = deepCopy(user);
         const data = await this.userRepo.update({_id: user.id}, {$set: user});
         if (!data['nModified']) {

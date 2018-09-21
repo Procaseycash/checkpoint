@@ -8,8 +8,6 @@ const UserSchema = new mongoose.Schema({
         phone_no: String,
         email: String,
         password: String,
-        address: String,
-        company: String,
         type: {type: String, lowercase: false, trim: true},
     },
     {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}},

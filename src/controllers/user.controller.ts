@@ -10,6 +10,8 @@ import {UserUpdateReq} from '../requests/user.update.req';
 import {UserReq} from '../requests/user.req';
 import {ServicesService} from '../services/services.service';
 import {ChangePasswordReq} from '../requests/change.password.req';
+import {UserEnum} from "../enums/user.enum";
+import {Roles} from "../shared/decorators/roles.decorator";
 
 @ApiUseTags('users')
 @Controller('users')
@@ -20,7 +22,7 @@ export class UserController {
     @Post()
     @ApiOperation({title: 'Phone number is optional'})
     async post(@Response() res, @Request() req, @Body() user: UserReq) {
-        const data = await this.userService.create(user);
+        const data = await this.userService.create(user, UserEnum.CLIENT_USER);
         return data ? RestfulRes.success(res, messages.users.created, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
@@ -38,6 +40,7 @@ export class UserController {
     }
 
     @ApiOAuth2Auth()
+    @Roles(UserEnum.CLIENT_USER)
     @Patch(':id/change_password')
     async changePassword(@Response() res,  @Headers('Authorization') authorization: string, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
         const data = await this.servicesService.changePassword(passwordSettings);
