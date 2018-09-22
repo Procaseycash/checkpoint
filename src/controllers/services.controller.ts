@@ -1,14 +1,12 @@
-import {ApiOperation, ApiUseTags} from '@nestjs/swagger';
+import {ApiUseTags} from '@nestjs/swagger';
 import {ServicesService} from '../services/services.service';
-import {Body, Controller, Get, Patch, Post, Response, Request, Param, ParseIntPipe, Delete, Put} from '@nestjs/common';
+import {Body, Controller, Get, Post, Response, Request} from '@nestjs/common';
 import {RestfulRes} from '../response/restful.res';
 import {messages} from '../config/messages.conf';
-import {ChangePasswordReq} from '../requests/change.password.req';
 import {EmailReq} from '../requests/email.req';
-import {jwt} from '../utils/jwt';
 import {LogoutEnum} from '../enums/logout.enum';
 import {LogoutReq} from '../requests/logout.req';
-import {ReqInstance} from "../shared/interceptors/req.instance";
+import {ReqInstance} from '../shared/interceptors/req.instance';
 
 @ApiUseTags('services')
 @Controller('services')

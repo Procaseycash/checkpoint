@@ -1,4 +1,4 @@
-const JsEncrypt = require('./jsencrypt.js');
+const JsEncrypt = require('./lib/jsencrypt.js');
 import * as path from 'path';
 import * as fs from 'fs';
 

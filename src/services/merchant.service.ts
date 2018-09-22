@@ -24,6 +24,7 @@ export class MerchantService {
     }
 
     public async update(merchant) {
+        if (merchant.merchant_key) merchant.merchant_key = undefined;
         await this.userService.update(this.merchantRepo, merchant);
         return await this.getMerchantById(merchant.id);
     }

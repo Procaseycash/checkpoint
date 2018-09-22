@@ -26,6 +26,8 @@ import {jwt} from '../utils/jwt';
 import {Merchant} from '../models/merchant';
 import {Consumer} from '../models/consumer';
 import {Session} from "../session/session";
+import {TransactionEnum} from "../enums/transaction.enum";
+import {ErrorLogEnum} from "../enums/error.log.enum";
 
 @Component()
 export class ServicesService {
@@ -42,6 +44,8 @@ export class ServicesService {
         return {
             mail: getEnums(MailEnum),
             user: getEnums(UserEnum),
+            transaction: getEnums(TransactionEnum),
+            error_log: getEnums(ErrorLogEnum),
             logout_by: getEnums(LogoutEnum),
         };
     }

@@ -1,16 +1,15 @@
 import {
-    Body, Controller, Get, Request, Post, Response, UseInterceptors, ParseIntPipe, Param,
-    Delete
+    Body, Controller, Get, Request, Post, Response, ParseIntPipe, Param,
+    Delete, Put,
 } from '@nestjs/common';
-import {ApiOAuth2Auth, ApiOperation, ApiUseTags} from '@nestjs/swagger';
-import {AuthReq} from '../requests/auth.req';
+import {ApiOAuth2Auth, ApiUseTags} from '@nestjs/swagger';
 import {messages} from '../config/messages.conf';
 import {RestfulRes} from '../response/restful.res';
-import {DecodeEncryptedRequestInterceptor} from '../shared/interceptors/decode.encrypted.request.interceptor';
-import {ServicesService} from '../services/services.service';
-import {WalletService} from "../services/wallet.service";
-import {UserEnum} from "../enums/user.enum";
-import {Roles} from "../shared/decorators/roles.decorator";
+import {WalletService} from '../services/wallet.service';
+import {UserEnum} from '../enums/user.enum';
+import {Roles} from '../shared/decorators/roles.decorator';
+import {WalletReq} from '../requests/wallet.req';
+import {WalletUpdateReq} from '../requests/wallet.update.req';
 
 @ApiUseTags('wallets')
 @Controller('wallets')
@@ -19,16 +18,16 @@ export class WalletController {
     }
 
     @Post()
-    async post(@Response() res, @Request() req, @Body() consumer: UserReq) {
-        const data = await this.walletService.create(consumer);
+    async post(@Response() res, @Request() req, @Body() wallet: WalletReq) {
+        const data = await this.walletService.create(wallet);
         return data ? RestfulRes.success(res, messages.wallets.created, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.CONSUMER)
     @Put(':id')
-    async update(@Response() res, @Request() req,  @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() consumer: UserUpdateReq) {
-        const data = await this.walletService.update(consumer);
+    async update(@Response() res, @Request() req,  @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() wallet: WalletUpdateReq) {
+        const data = await this.walletService.update(wallet);
         return data ? RestfulRes.success(res, messages.wallets.updated, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
@@ -37,15 +36,7 @@ export class WalletController {
         const data = await this.walletService.findAll();
         return data ? RestfulRes.success(res, messages.wallets.list.success, data) : RestfulRes.error(res, messages.wallets.list.failed);
     }
-
-    @ApiOAuth2Auth()
-    @Roles(UserEnum.CONSUMER)
-    @Get(':id/check-in-history')
-    async findAllConsumerCheckIn(@Response() res, @Headers('Authorization') authorization: string, @Request() request, @Param('id', new ParseIntPipe()) id: number) {
-        const data = await this.walletService.getConsumerCheckInHistory();
-        return data ? RestfulRes.success(res, messages.history.list.success, data) : RestfulRes.error(res, messages.history.list.failed);
-    }
-
+    
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN)
     @Delete(':id')
