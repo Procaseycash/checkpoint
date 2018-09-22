@@ -61,9 +61,9 @@ You can change the below port from `src/config/app.config.ts`.
 ```$xslt
 Test: 6002 
     
-Production: 6001
+Production: 6003
     
-Development: 6000
+Development: 6001
 ```
 ### Run a Build Version
 
@@ -116,7 +116,7 @@ $ npm run db:seed:undo
 ```
 
 ## DISTANCE MATRIX API_KEY
-Please change the API_KEY from `config/app.config.ts` to a paid version API_KEY as the one in use is limited to few request/day. 
+Please change the API_KEY from `config/app.config.ts` to a paid version API_KEY as the one in use is limited but can run through the test. 
 
 ## Support
 
