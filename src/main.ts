@@ -15,8 +15,9 @@ import {MailEnum} from './enums/mail.enum';
 import {API_VERSION, PORT} from './config/app.config';
 import {SharedModule} from './modules/shared.module';
 import {Session} from './session/session';
-import {ReqInstanceInterceptor} from 'shared/interceptors/req.instance.interceptor';
-import {AuthorizationInterceptor} from 'shared/interceptors/authorization.interceptor';
+import {ReqInstanceInterceptor} from './shared/interceptors/req.instance.interceptor';
+import {AuthorizationInterceptor} from './shared/interceptors/authorization.interceptor';
+import * as clc from 'cli-color';
 
 const expressInstance = express();
 expressInstance.engine('html', consolidate.swig);
@@ -29,7 +30,7 @@ expressInstance.use(fileUpload({
     limits: {fileSize: 20 * 1024 * 1024},
 }));
 
-expressInstance.get('/', (req, res) => res.redirect('api/'));
+expressInstance.get('/', (req, res) => res.redirect(301, 'api/'));
 
 /**
  * Application bootstrap
@@ -53,6 +54,7 @@ async function bootstrap() {
     Swagger.configure();
     Swagger.setup(app);
     await app.listen(process.env.PORT || PORT);
+    console.log(clc.yellowBright(`Application running on http://localhost:${process.env.PORT || PORT}/`));
 }
 
 bootstrap();

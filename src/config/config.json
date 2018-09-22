@@ -9,14 +9,14 @@
   "test": {
     "database": "checkpoint_db",
     "password": "password1",
-    "username": "checkpoint_db",
+    "username": "procaseycash",
     "host": "ds111063.mlab.com",
     "port": 11063
   },
   "production": {
     "database": "checkpoint_db",
     "password": "password1",
-    "username": "checkpoint_db",
+    "username": "procaseycash",
     "host": "ds111063.mlab.com",
     "port": 11063
   }

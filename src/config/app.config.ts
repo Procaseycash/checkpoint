@@ -1,6 +1,5 @@
 import {ENV} from '../env';
 import {HttpStatus} from '@nestjs/common';
-import {Session} from '../session/session';
 
 export const APP_ENV = ENV.current();
 export const PORT = (APP_ENV === 'production') ? 6001 : (APP_ENV === 'test') ? 6002 : 6000;

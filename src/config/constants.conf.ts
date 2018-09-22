@@ -6,7 +6,7 @@ export const modelCounter = {
     loginInfo: 'loginInfoId',
     user: 'userId',
     consumer: 'consumerId',
-    merchant: 'consumerId',
+    merchant: 'merchantId',
     wallet: 'walletId',
     transaction: 'transactionId',
     checkInLog: 'checkInLogId',

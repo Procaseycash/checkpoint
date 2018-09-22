@@ -36,7 +36,8 @@ export class UserService {
         user.password = password.hash(user.password);
         const data = await repo.create(userCopy); // account creation using its repo
         const userLogin = await this.userRepo.create({
-            user: user.id,
+            _id: await getNextSequenceValue(this.counterRepo, modelCounter.user),
+            user: user._id,
             email: user.email,
             password: user.password,
             type: user.type,

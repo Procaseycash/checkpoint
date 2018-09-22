@@ -1,6 +1,6 @@
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import {INestApplication} from '@nestjs/common/interfaces/nest-application.interface';
-import {API_VERSION} from 'config/app.config';
+import {API_VERSION} from './config/app.config';
 
 export class Swagger {
     private static options;

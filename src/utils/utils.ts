@@ -37,7 +37,7 @@ export const password = {
  * @returns {any}
  */
 export const deepCopy = (data) => {
-    console.log('data :: ', data)
+    // console.log('data :: ', data)
     return JSON.parse(JSON.stringify(data));
 };
 
@@ -255,6 +255,5 @@ export const getNextSequenceValue = async (repo, sequenceName) => {
 };
 
 export const generateKey = () => {
-    return ENCRYPTION.encode(faker.random.uuid + new Date().getTime()).substring(0, 20);
+    return ENCRYPTION.encode(faker.random.uuid + new Date().getTime()).substring(0, 30);
 };
-

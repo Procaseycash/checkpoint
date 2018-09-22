@@ -75,10 +75,14 @@ export class ServicesService {
     }
 
     async getToken(id: number) {
-        const data = await this.userRepo.find(id).exec();
-        await data.forEach(async (user, i) => {
-            data[i]['token'] = await this.processToken(user);
-        });
+        let data = await this.userRepo.find({user: id}).exec();
+        if (!data) throw new UserNotFoundException();
+        data = deepCopy(data);
+        const len = data.length;
+        for (let i = 0; i < len; i++) {
+            console.log('i=', i);
+            data[i]['token'] = await this.processToken(data[i]);
+        }
         return data;
     }
 
