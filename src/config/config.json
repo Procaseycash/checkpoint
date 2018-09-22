@@ -7,17 +7,17 @@
     "port": 27017
   },
   "test": {
-    "database": "checkout_db",
+    "database": "checkpoint_db",
     "password": "password1",
-    "username": "checkout_point",
-    "host": "ds121262.mlab.com",
-    "port": 21262
+    "username": "checkpoint_db",
+    "host": "ds111063.mlab.com",
+    "port": 11063
   },
   "production": {
-    "database": "checkout_db",
+    "database": "checkpoint_db",
     "password": "password1",
-    "username": "checkout_point",
-    "host": "ds121262.mlab.com",
-    "port": 21262
+    "username": "checkpoint_db",
+    "host": "ds111063.mlab.com",
+    "port": 11063
   }
 }

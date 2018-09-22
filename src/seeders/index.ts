@@ -2,9 +2,9 @@ import {databaseRepository} from '../repos/db.repository';
 import * as mongoose from 'mongoose';
 import UserSchema from '../schemas/user';
 import CounterSchema from '../schemas/counters';
-import USERS from './20180409161313-user-seed';
+import USERS from './user-seed';
 import {modelCounter} from '../config/constants.conf';
-import LoginInfoSchema from "../schemas/login_info";
+import LoginInfoSchema from '../schemas/login_info';
 
 const connect = async () => await databaseRepository[0].useFactory();
 let User = null, LoginInfo = null, Counter = null;

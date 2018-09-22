@@ -1,5 +1,5 @@
 import {
-    Body, Controller, Get, Request, Post, Response, ParseIntPipe, Param,
+    Body, Controller, Get, Request, Post, Headers, Response, ParseIntPipe, Param,
     Delete, Put,
 } from '@nestjs/common';
 import {ApiOAuth2Auth, ApiUseTags} from '@nestjs/swagger';

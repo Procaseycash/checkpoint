@@ -1,7 +1,6 @@
-import {IsDefined, MinLength, IsString} from 'class-validator';
+import {IsDefined, MinLength, IsString, MaxLength} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
 import {UserReq} from "./user.req";
-import {MaxLength, MinLength} from "class-validator";
 
 export class MerchantReq extends UserReq {
     @ApiModelProperty({description: 'Merchant Bank Account Number'})

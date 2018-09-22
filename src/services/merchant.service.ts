@@ -41,8 +41,8 @@ export class MerchantService {
         return await this.merchantRepo.findOne({merchant_key: key});
     }
 
-    async validateMerchant(merchant: { email: string, password: string }): boolean {
-        const data = await this.merchantRepo.findOne({email});
+    async validateMerchant(merchant: { email: string, password: string }): Promise<boolean> {
+        const data = await this.merchantRepo.findOne({email: merchant.email});
         return (data && data.email === merchant.email && password.verify(merchant.password, data.password));
     }
 

@@ -8,11 +8,12 @@ import {AuthController} from '../controllers/auth.controller';
 import {MerchantController} from '../controllers/merchant.controller';
 import {ConsumerController} from '../controllers/consumer.controller';
 import {MerchantService} from '../services/merchant.service';
+import {ConsumerService} from "../services/consumer.service";
 
 @Module({
     imports: [forwardRef(() => SharedModule)],
     controllers: [UserController, AuthController, MerchantController, ConsumerController],
-    components: [UserService, MerchantService, ConsumerController, ...userRepo, ...merchantRepo, ...consumerRepo],
-    exports: [UserService, MerchantService, ConsumerController, ...userRepo, ...merchantRepo, ...consumerRepo],
+    components: [UserService, MerchantService, ConsumerService, ...userRepo, ...merchantRepo, ...consumerRepo],
+    exports: [UserService, MerchantService, ConsumerService, ...userRepo, ...merchantRepo, ...consumerRepo],
 })
 export class UserModule {}

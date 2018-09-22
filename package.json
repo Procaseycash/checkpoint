@@ -13,6 +13,8 @@
     "start:raw": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev-win": "set NODE_ENV=development && nodemon -e ts  --watch src",
     "start:dev": "export NODE_ENV=development && nodemon -e ts  --watch src",
+    "prestart:test-win": "rmdir /S dist && tsc && node copy-dir && node minify",
+    "start:test-win": "set NODE_ENV=test && node dist/main.js",
     "prestart:test": "rm -rf dist && tsc && node copy-dir && node minify",
     "start:test": "export NODE_ENV=test && node dist/main.js",
     "prestart:prod": "rm -rf dist && tsc && node copy-dir && node minify",

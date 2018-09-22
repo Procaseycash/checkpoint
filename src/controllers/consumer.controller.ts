@@ -28,7 +28,7 @@ export class ConsumerController {
     @Roles(UserEnum.CONSUMER)
     @Put(':id')
     @ApiOperation({title: 'Phone number is optional'})
-    async update(@Response() res, @Request() req,  @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() consumer: UserUpdateReq) {
+    async update(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() consumer: UserUpdateReq) {
         const data = await this.consumerService.update(consumer);
         return data ? RestfulRes.success(res, messages.users.updated, data) : RestfulRes.error(res, messages.operationFailed);
     }
