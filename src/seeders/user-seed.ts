@@ -5,7 +5,7 @@ import {UserEnum} from '../enums/user.enum';
 
 const USERS = [];
 for (let i = 0; i < 5; i++) {
-    const userType = [UserEnum.CONSUMER, UserEnum.SYSADMIN];
+    const userType = [UserEnum.TRAVELLER, UserEnum.SYSADMIN];
     const rand = Math.floor(Math.random() * 2);
     const user = {
         _id: i + 1,
@@ -14,7 +14,7 @@ for (let i = 0; i < 5; i++) {
         last_name: faker.name.lastName(),
         phone_no: faker.phone.phoneNumber(),
         email: faker.internet.email().toLowerCase(),
-        type: UserEnum.CONSUMER,
+        type: UserEnum.TRAVELLER,
     };
     USERS.push(user);
 }

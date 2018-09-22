@@ -8,7 +8,7 @@ const WalletSchema = new mongoose.Schema({
         _id: Number,
         wallet_no: Schema.Types.Mixed,
         amount: Schema.Types.Double,
-        consumer: {type: Number, ref: 'Consumer'},
+        traveller: {type: Number, ref: 'Traveller'},
         currency: Schema.Types.Mixed,
     },
     {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}},

@@ -18,6 +18,7 @@ export class RolesGuard implements CanActivate {
         }
         const user: User = jwt.verify(req.headers['authorization']) || {};
         const hasRole = () => roles.indexOf(user.type) > -1;
+        console.log('UserRole=', user)
         const state = user && user.type && hasRole();
         if (!state) {
             throw new ForbiddenException(messages.validations.req.apiAccess);

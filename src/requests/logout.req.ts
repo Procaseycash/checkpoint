@@ -4,7 +4,7 @@ import {LogoutEnum} from '../enums/logout.enum';
 
 export class LogoutReq {
 
-    @ApiModelProperty({type: String, description: 'This is an enum for logout, Please provide only if consumer is logged out by Admin',
+    @ApiModelProperty({type: String, description: 'This is an enum for logout, Please provide only if traveller is logged out by Admin',
         enum: [LogoutEnum.SYSADMIN, LogoutEnum.USER]})
     @IsOptional()
     @IsString()

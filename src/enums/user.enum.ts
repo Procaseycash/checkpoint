@@ -1,6 +1,6 @@
 export enum UserEnum {
     SYSADMIN = 'SYSADMIN',
-    CONSUMER = 'CONSUMER',
+    TRAVELLER = 'TRAVELLER',
     DRIVER = 'DRIVER',
     MERCHANT = 'MERCHANT',
 }

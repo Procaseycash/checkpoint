@@ -1,4 +1,4 @@
-import {BadRequestException, Component, Inject} from '@nestjs/common';
+import {BadRequestException, Component, forwardRef, Inject} from '@nestjs/common';
 import {Wallet} from '../models/wallet';
 import {generateKey, getNextSequenceValue, getOffsetAndCateria, getPaginated} from '../utils/utils';
 import {Model} from 'mongoose';
@@ -6,21 +6,23 @@ import {Counter} from '../models/counter';
 import {ReqInstance} from '../shared/interceptors/req.instance';
 import {messages} from '../config/messages.conf';
 import {CURRENCY, modelCounter} from '../config/constants.conf';
+import {MerchantService} from "./merchant.service";
 
 @Component()
 export class WalletService {
     constructor(@Inject('WalletRepo') private readonly walletRepo: Model<Wallet>,
+                @Inject(forwardRef(() => MerchantService)) private readonly merchantService: MerchantService,
                 @Inject('CounterRepo') private readonly counterRepo: Model<Counter>) {
     }
 
     public async create(amount: { amount: number }) {
-        const userWalletExist = await this.getWalletByConsumerId(ReqInstance.req.user.id);
+        const userWalletExist = await this.getWalletByTravellerId(ReqInstance.req.user.id);
         if (userWalletExist) throw new BadRequestException(messages.walletAlreadyExist);
         const wallet_no = generateKey();
         const wallet = {
             _id: await getNextSequenceValue(this.counterRepo, modelCounter.wallet),
             ...amount,
-            consumer: ReqInstance.req.user.id,
+            traveller: ReqInstance.req.user.id,
             currency: CURRENCY,
             wallet_no,
         };
@@ -29,7 +31,7 @@ export class WalletService {
         return await this.getWalletById(wallet._id);
     }
 
-    public async update(wallet: {amount: number , id: number}) {
+    public async update(wallet: { amount: number, id: number }) {
         const data = await this.walletRepo.update({_id: wallet.id}, {$set: {amount: wallet.amount}});
         if (!data['nModified']) throw new BadRequestException(messages.unable);
         return await this.getWalletById(wallet.id);
@@ -42,20 +44,25 @@ export class WalletService {
     }
 
     async getWalletById(id: number) {
-        return await this.walletRepo.findOne({_id: id}).populate('consumer').exec();
+        return await this.walletRepo.findOne({_id: id}).populate('traveller').exec();
     }
 
-    async getWalletByConsumerId(id: number) {
-        return await this.walletRepo.findOne({consumer: id}).populate('consumer').exec();
+    async getWalletByTravellerId(id: number) {
+        return await this.walletRepo.findOne({traveller: id}).populate('traveller').exec();
     }
 
     async getByWalletNo(wallet_no) {
-        return await this.walletRepo.findOne({wallet_no}).populate('consumer').exec();
+        return await this.walletRepo.findOne({wallet_no}).populate('traveller').exec();
+    }
+
+    async getByWalletNoUsingMerchantSecret(secret, wallet_no) {
+        await this.merchantService.decryptMerchantSecret({secret}); // validate and decode merchant secret
+        return await this.walletRepo.findOne({wallet_no}).populate('traveller').exec();
     }
 
     async findAll() {
         const info = getOffsetAndCateria(ReqInstance.req);
-        const result = await this.walletRepo.find().populate('consumer').sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
+        const result = await this.walletRepo.find().populate('traveller').sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
         return await getPaginated(result, this.walletRepo, info);
     }
 }

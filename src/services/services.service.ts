@@ -23,7 +23,7 @@ import {UserService} from './user.service';
 import {ReqInstance} from '../shared/interceptors/req.instance';
 import {jwt} from '../utils/jwt';
 import {Merchant} from '../models/merchant';
-import {Consumer} from '../models/consumer';
+import {Traveller} from '../models/traveller';
 import {Session} from "../session/session";
 import {TransactionEnum} from "../enums/transaction.enum";
 import {ErrorLogEnum} from "../enums/error.log.enum";
@@ -33,7 +33,7 @@ export class ServicesService {
     constructor(@Inject('UserRepo') private readonly userRepo: Model<User>,
                 @Inject('LoginInfoRepo') private readonly loginInfoRepo: Model<LoginInfo>,
                 @Inject('MerchantRepo') private readonly merchantRepo: Model<Merchant>,
-                @Inject('ConsumerRepo') private readonly consumerRepo: Model<Consumer>,
+                @Inject('TravellerRepo') private readonly travellerRepo: Model<Traveller>,
                 @Inject('CounterRepo') private readonly counterRepo: Model<Counter>,
                 @Inject(forwardRef(() => UserService))
                 private userService: UserService) {
@@ -53,7 +53,7 @@ export class ServicesService {
         data = deepCopy(data);
         data['ref_token'] = generateKey().replace(/[^a-zA-Z0-9]/g, '').substring(0, 15);
         let userInfo = {};
-        const repo: any = (data.type === UserEnum.CONSUMER) ? this.consumerRepo : (data.type === UserEnum.MERCHANT)
+        const repo: any = (data.type === UserEnum.TRAVELLER) ? this.travellerRepo : (data.type === UserEnum.MERCHANT)
             ? this.merchantRepo : null;
         if (repo) userInfo = await repo.findOne({email: data.email});
         if (userInfo && repo) userInfo = deepCopy(userInfo);

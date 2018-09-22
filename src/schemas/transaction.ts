@@ -6,7 +6,7 @@ mongooseDouble(mongoose);
 const Schema = mongoose.Schema;
 const TransactionSchema = new mongoose.Schema({
         _id: Number,
-        consumer: {type: Number, ref: 'Consumer'},
+        traveller: {type: Number, ref: 'Traveller'},
         merchant:  {type: Number, ref: 'Merchant'},
         amount: Schema.Types.Double,
         item_name: String,

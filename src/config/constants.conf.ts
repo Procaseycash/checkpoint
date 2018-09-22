@@ -5,7 +5,7 @@ export const constants = {
 export const modelCounter = {
     loginInfo: 'loginInfoId',
     user: 'userId',
-    consumer: 'consumerId',
+    traveller: 'travellerId',
     merchant: 'merchantId',
     wallet: 'walletId',
     transaction: 'transactionId',

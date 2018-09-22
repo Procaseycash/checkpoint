@@ -36,9 +36,8 @@ export class MerchantController {
         return data ? RestfulRes.success(res, messages.generatedSecret, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
-    @ApiOAuth2Auth()
-    @Roles(UserEnum.MERCHANT)
     @Post('pay')
+    @ApiOperation({title: 'This is used to process merchant payments from merchant terminal using her merchant\'s secret and key'})
     async makePayment(@Response() res,
                       @Headers('merchant_secret') merchant_secret: string,
                       @Headers('merchant_key') merchant_key: string,
@@ -48,6 +47,7 @@ export class MerchantController {
     }
 
     @Get('transactions')
+    @ApiOperation({title: 'This is used to get merchant transactions from merchant terminal using her merchant\'s secret and key'})
     async getTransactionsUsingSecret(@Response() res,
                                      @Headers('merchant_secret') merchant_secret: string,
                                      @Headers('merchant_key') merchant_key: string,

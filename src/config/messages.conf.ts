@@ -38,7 +38,7 @@ export const messages = {
     sessionExpired: 'Your session has expired',
     notAuthorized: 'You are not authorized to have access to this resource',
     notAuthorizedPerform: 'You are not authorized to have perform this operation',
-    notOrganizationUser: 'This consumer does not belong to your organization.',
+    notOrganizationUser: 'This traveller does not belong to your organization.',
     authorizationError: 'Unable to verify user credentials',
     notAccount: 'This account does not exist or match account we found',
     unassign: 'You cannot unassign selected information due to its usage by one or more resources',

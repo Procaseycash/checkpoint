@@ -19,10 +19,10 @@ export class Swagger {
             .addOAuth2('implicit', '/' + API_VERSION + '/auth/token')
             .setContactEmail('kezyolanipekun@gmail.com')
             .addTag('auth', 'This is used to authenticate a user and get user tokens for different account at ago for purpose of testing API and login')
-            .addTag('consumers', 'These are APIs belonging to a user that can check in to a location')
+            .addTag('travellers', 'These are APIs belonging to a user that can check in to a location')
             .addTag('merchants', 'These are APIs belonging to Merchant that have integrated to CheckPoint App for customer point payments')
-            .addTag('users', 'These are APIs pertaining to general user accounts be it consumers, mrchants or drivers')
-            .addTag('wallets', 'These are APIs pertaining to consumers\' wallets')
+            .addTag('users', 'These are APIs pertaining to general user accounts be it travellers, mrchants or drivers')
+            .addTag('wallets', 'These are APIs pertaining to travellers\' wallets')
             .addTag('services', 'These are APIs pertaining to general services')
             .build();
     }

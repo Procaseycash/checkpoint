@@ -3,9 +3,11 @@ import * as mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const CheckInLogSchema = new Schema({
     _id: Number,
-    consumer: {type: Number, ref: 'Consumer'},
-    origin: String,
-    destination: String,
+    traveller: {type: Number, ref: 'Traveller'},
+    user_origin_location: String,
+    gps_origin_location: String,
+    user_destination_location: String,
+    gps_destination_location: String,
     kilometer: String,
     point: String,
     amount: String,

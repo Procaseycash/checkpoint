@@ -3,7 +3,7 @@ import LoginInfoSchema from '../schemas/login_info';
 import {Connection} from 'mongoose';
 import CounterSchema from '../schemas/counters';
 import CheckInLogSchema from '../schemas/check_in_log';
-import ConsumerSchema from '../schemas/consumer';
+import TravellerSchema from '../schemas/traveller';
 import MerchantSchema from '../schemas/merchant';
 import WalletSchema from '../schemas/wallet';
 import TransactionSchema from '../schemas/transaction';
@@ -16,10 +16,10 @@ export const userRepo = [
     },
 ];
 
-export const consumerRepo = [
+export const travellerRepo = [
     {
-        provide: 'ConsumerRepo',
-        useFactory: (connection: Connection) => connection.model('Consumer', ConsumerSchema),
+        provide: 'TravellerRepo',
+        useFactory: (connection: Connection) => connection.model('Traveller', TravellerSchema),
         inject: ['DbConnectionToken'],
     },
 ];

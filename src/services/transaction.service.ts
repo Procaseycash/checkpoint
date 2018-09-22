@@ -24,8 +24,8 @@ export class TransactionService {
     }
 
     public async makePayment(payload: TransactionReq) {
-        const consumerWallet = await this.walletService.getByWalletNo(payload.wallet_no);
-        if (consumerWallet.amount < payload.amount) throw new InsufficientBalance(consumerWallet.amount);
+        const travellerWallet = await this.walletService.getByWalletNo(payload.wallet_no);
+        if (travellerWallet.amount < payload.amount) throw new InsufficientBalance(travellerWallet.amount);
         const merchantSecret = ENCRYPTION.decode(ReqInstance.req.headers.merchant_secret);
         const validateMerchant = await this.merchantService.validateMerchant(merchantSecret);
         if (!validateMerchant) throw new BadRequestException(messages.merchantSecretInValid);
@@ -36,8 +36,8 @@ export class TransactionService {
         const pay = await MockPayment.pay(Object.assign(payload, merchantSecret));
         if (!(pay.status_code === PAYMENT_STATUS_CODES.remitaSuccess
                 || pay.status_code === PAYMENT_STATUS_CODES.paystackSuccess)) throw new TransactionFailure();
-        consumerWallet.amount -= payload.amount;
-        await this.walletService.update(consumerWallet); // deduct amount paid from wallet
+        travellerWallet.amount -= payload.amount;
+        await this.walletService.update(travellerWallet); // deduct amount paid from wallet
         return await this.update({
             id: storeInitTransaction._id,
             status: TransactionEnum.PAID,
@@ -54,7 +54,7 @@ export class TransactionService {
             amount: payload.amount,
             item_name: payload.item_name,
             item_code: payload.item_code,
-            consumer: wallet.consumer._id,
+            traveller: wallet.traveller._id,
             merchant: merchant._id,
             currency: CURRENCY,
             status: TransactionEnum.PENDING,
@@ -81,19 +81,19 @@ export class TransactionService {
     }
 
     async getTransactionById(id: number) {
-        return await this.transactionRepo.findOne({_id: id}).populate('consumer').populate('merchant').exec();
+        return await this.transactionRepo.findOne({_id: id}).populate('traveller').populate('merchant').exec();
     }
 
-    async getTransactionByConsumerId(id: number) {
+    async getTransactionByTravellerId(id: number) {
         const info = getOffsetAndCateria(ReqInstance.req);
-        const result = await this.transactionRepo.find({consumer: id}).populate('consumer').populate('merchant')
+        const result = await this.transactionRepo.find({traveller: id}).populate('traveller').populate('merchant')
             .sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
         return await getPaginated(result, this.transactionRepo, info);
     }
 
     async getTransactionByMerchantId(id: number) {
         const info = getOffsetAndCateria(ReqInstance.req);
-        const result = await this.transactionRepo.find({merchant: id}).populate('consumer').populate('merchant')
+        const result = await this.transactionRepo.find({merchant: id}).populate('traveller').populate('merchant')
             .sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
         return await getPaginated(result, this.transactionRepo, info);
     }
@@ -101,14 +101,14 @@ export class TransactionService {
     async getTransactionByMerchantSecret(secret: string) {
         const info = getOffsetAndCateria(ReqInstance.req);
         const merchant = await this.merchantService.decryptMerchantSecret({secret});
-        const result = await this.transactionRepo.find({merchant: merchant['id']}).populate('consumer').populate('merchant')
+        const result = await this.transactionRepo.find({merchant: merchant['id']}).populate('traveller').populate('merchant')
             .sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
         return await getPaginated(result, this.transactionRepo, info);
     }
 
     async findAll() {
         const info = getOffsetAndCateria(ReqInstance.req);
-        const result = await this.transactionRepo.find().populate('consumer').populate('merchant').sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
+        const result = await this.transactionRepo.find().populate('traveller').populate('merchant').sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
         return await getPaginated(result, this.transactionRepo, info);
     }
 }

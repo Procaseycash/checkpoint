@@ -1,7 +1,7 @@
 import {Document} from 'mongoose';
 
 export interface Transaction extends Document {
-    readonly consumer: any;
+    readonly traveller: any;
     readonly merchant: any;
     readonly amount: number;
     readonly item_name: string;

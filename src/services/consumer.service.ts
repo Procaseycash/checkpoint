@@ -1,5 +1,5 @@
 import {Component, Inject} from '@nestjs/common';
-import {Consumer} from '../models/consumer';
+import {Traveller} from '../models/traveller';
 import {deepCopy, getNextSequenceValue, getOffsetAndCateria, getPaginated} from '../utils/utils';
 import {Model} from 'mongoose';
 import {Counter} from '../models/counter';
@@ -10,46 +10,46 @@ import {UserService} from './user.service';
 import {UserEnum} from '../enums/user.enum';
 
 @Component()
-export class ConsumerService {
-    constructor(@Inject('ConsumerRepo') private readonly consumerRepo: Model<Consumer>,
+export class TravellerService {
+    constructor(@Inject('TravellerRepo') private readonly travellerRepo: Model<Traveller>,
                 private readonly userService: UserService,
                 @Inject('CheckInLogRepo') private readonly checkInLogRepo: Model<CheckInLog>,
                 @Inject('CounterRepo') private readonly counterRepo: Model<Counter>) {
     }
 
-    public async create(consumer) {
-        consumer.type = UserEnum.CONSUMER;
-        return await this.userService.create(this.consumerRepo, consumer);
+    public async create(traveller) {
+        traveller.type = UserEnum.TRAVELLER;
+        return await this.userService.create(this.travellerRepo, traveller);
     }
 
-    public async update(consumer) {
-        await this.userService.update(this.consumerRepo, consumer);
-        return await this.getConsumerById(consumer.id);
+    public async update(traveller) {
+        await this.userService.update(this.travellerRepo, traveller);
+        return await this.getTravellerById(traveller.id);
     }
 
     public async remove(id) {
-        return await this.userService.remove(this.consumerRepo, id);
+        return await this.userService.remove(this.travellerRepo, id);
     }
 
-    async getConsumerById(id: number) {
-        return await this.userService.getUserById(this.consumerRepo, id);
+    async getTravellerById(id: number) {
+        return await this.userService.getUserById(this.travellerRepo, id);
     }
 
     async findAll() {
         const info = getOffsetAndCateria(ReqInstance.req);
-        const result = await this.consumerRepo.find().sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
-        return await getPaginated(result, this.consumerRepo, info);
+        const result = await this.travellerRepo.find().sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
+        return await getPaginated(result, this.travellerRepo, info);
     }
 
-    public async getConsumerCheckInHistory() {
-        const consumer = ReqInstance.req.user;
+    public async getTravellerCheckInHistory() {
+        const traveller = ReqInstance.req.user;
         const info = getOffsetAndCateria(ReqInstance.req);
-        const result = await this.checkInLogRepo.find({consumer: consumer.id}).populate('consumer').sort({_id: -1}).skip(info.offset).limit(info.nPerPage).exec();
+        const result = await this.checkInLogRepo.find({traveller: traveller.id}).populate('traveller').sort({_id: -1}).skip(info.offset).limit(info.nPerPage).exec();
         return await getPaginated(result, this.checkInLogRepo, info);
     }
 
     public async logCheckInQuery(result) {
-        result.consumer = ReqInstance.req.user ? ReqInstance.req.user.id : null;
+        result.traveller = ReqInstance.req.user ? ReqInstance.req.user.id : null;
         result._id = await getNextSequenceValue(this.counterRepo, modelCounter.checkInLog);
         const data = await this.checkInLogRepo.create(result);
         console.log('logQuery', deepCopy(data));
@@ -58,7 +58,7 @@ export class ConsumerService {
 
     public async getCheckInHistory() {
         const info = getOffsetAndCateria(ReqInstance.req);
-        const result = await this.checkInLogRepo.find().populate('consumer').sort({_id: -1}).skip(info.offset).limit(info.nPerPage).exec();
+        const result = await this.checkInLogRepo.find().populate('traveller').sort({_id: -1}).skip(info.offset).limit(info.nPerPage).exec();
         return await getPaginated(result, this.checkInLogRepo, info);
     }
 }

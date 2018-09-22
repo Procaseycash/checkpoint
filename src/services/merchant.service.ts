@@ -53,7 +53,7 @@ export class MerchantService {
         const data = await this.userRepo.findOne({email: merchant.email});
         if (!(data && data.email === merchant.email && password.verify(merchant.password, data.password))) throw new UnauthorizedException();
         const merchantData = await this.merchantRepo.findOne({email: merchant.email});
-        return ENCRYPTION.encode(Object.assign(data, merchantData));
+        return ENCRYPTION.encode(merchantData);
     }
 
     async decryptMerchantSecret(merchant: { secret: string }): Promise<Merchant> {
@@ -62,7 +62,7 @@ export class MerchantService {
             email: decodedSecret.email,
             merchant_key: decodedSecret.merchant_key,
         });
-        if (!merchantData) throw new UnauthorizedException();
+        if (!merchantData || merchantData.merchant_key !== ReqInstance.req.headers.merchant_key) throw new UnauthorizedException();
         return decodedSecret;
     }
 

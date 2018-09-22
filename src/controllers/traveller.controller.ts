@@ -2,7 +2,7 @@ import {
     Controller, Get, Req, Headers, Response, Request, Post, Param,
     ParseIntPipe, Body, Put, Delete, Patch,
 } from '@nestjs/common';
-import {ConsumerService} from '../services/consumer.service';
+import {TravellerService} from '../services/traveller.service';
 import {ApiOAuth2Auth, ApiOperation, ApiUseTags} from '@nestjs/swagger';
 import {messages} from '../config/messages.conf';
 import {RestfulRes} from '../response/restful.res';
@@ -13,43 +13,43 @@ import {Roles} from '../shared/decorators/roles.decorator';
 import {TransactionService} from "../services/transaction.service";
 import {WalletService} from "../services/wallet.service";
 
-@ApiUseTags('consumers')
-@Controller('consumers')
-export class ConsumerController {
-    constructor(private consumerService: ConsumerService,
+@ApiUseTags('travellers')
+@Controller('travellers')
+export class TravellerController {
+    constructor(private travellerService: TravellerService,
                 private walletService: WalletService,
                 private readonly transactionService: TransactionService) {
     }
 
     @Post()
     @ApiOperation({title: 'Phone number is optional'})
-    async post(@Response() res, @Request() req, @Body() consumer: UserReq) {
-        const data = await this.consumerService.create(consumer);
+    async post(@Response() res, @Request() req, @Body() traveller: UserReq) {
+        const data = await this.travellerService.create(traveller);
         return data ? RestfulRes.success(res, messages.users.created, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
     @ApiOAuth2Auth()
-    @Roles(UserEnum.CONSUMER)
+    @Roles(UserEnum.TRAVELLER)
     @Put(':id')
     @ApiOperation({title: 'Phone number is optional'})
-    async update(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() consumer: UserUpdateReq) {
-        const data = await this.consumerService.update(consumer);
+    async update(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() traveller: UserUpdateReq) {
+        const data = await this.travellerService.update(traveller);
         return data ? RestfulRes.success(res, messages.users.updated, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
     @Get()
-    @ApiOperation({title: 'Get intentionally exposed', description: 'For the sake of test purposes, we expose the get consumers, ' +
-    'use consumer Id on the authorize on swagger. This might return a list of users with same ID but pick the token of type that is consumer and use it in authorization'})
+    @ApiOperation({title: 'Get intentionally exposed', description: 'For the sake of test purposes, we expose the get travellers, ' +
+    'use traveller Id on the authorize on swagger. This might return a list of users with same ID but pick the token of type that is traveller and use it in authorization'})
     async findAll(@Response() res, @Request() request) {
-        const data = await this.consumerService.findAll();
+        const data = await this.travellerService.findAll();
         return data ? RestfulRes.success(res, messages.users.list.success, data) : RestfulRes.error(res, messages.users.list.failed);
     }
 
     @ApiOAuth2Auth()
-    @Roles(UserEnum.CONSUMER)
+    @Roles(UserEnum.TRAVELLER)
     @Get(':id/check-in-history')
-    async findAllConsumerCheckIn(@Response() res, @Headers('Authorization') authorization: string, @Request() request, @Param('id', new ParseIntPipe()) id: number) {
-        const data = await this.consumerService.getConsumerCheckInHistory();
+    async findAllTravellerCheckIn(@Response() res, @Headers('Authorization') authorization: string, @Request() request, @Param('id', new ParseIntPipe()) id: number) {
+        const data = await this.travellerService.getTravellerCheckInHistory();
         return data ? RestfulRes.success(res, messages.history.list.success, data) : RestfulRes.error(res, messages.history.list.failed);
     }
 
@@ -57,37 +57,37 @@ export class ConsumerController {
     @Roles(UserEnum.SYSADMIN)
     @Delete(':id')
     async remove(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
-        const data = await this.consumerService.remove(id);
+        const data = await this.travellerService.remove(id);
         return data ? RestfulRes.success(res, messages.deleteSuccess, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
 
     @ApiOAuth2Auth()
-    @Roles(UserEnum.CONSUMER)
+    @Roles(UserEnum.TRAVELLER)
     @Get(':id/transactions')
     async getTransactions(@Response() res,
                           @Param('id', new ParseIntPipe()) id: number,
                           @Headers('Authorization') authorization: string,
                           @Request() req) {
-        const data = await this.transactionService.getTransactionByConsumerId(id);
+        const data = await this.transactionService.getTransactionByTravellerId(id);
         return data ? RestfulRes.success(res, messages.list, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
 
     @ApiOAuth2Auth()
-    @Roles(UserEnum.SYSADMIN, UserEnum.CONSUMER)
+    @Roles(UserEnum.SYSADMIN, UserEnum.TRAVELLER)
     @Get(':id')
     async fetchAUser(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
-        const data = await this.consumerService.getConsumerById(id);
+        const data = await this.travellerService.getTravellerById(id);
         return data ? RestfulRes.success(res, messages.users.one.success, data) : RestfulRes.error(res, messages.users.one.failed);
     }
 
     @ApiOAuth2Auth()
-    @Roles(UserEnum.CONSUMER)
+    @Roles(UserEnum.TRAVELLER)
     @Get(':id/wallets')
-    async fetchByConsumerId(@Response() res, @Headers('Authorization') authorization: string,
+    async fetchByTravellerId(@Response() res, @Headers('Authorization') authorization: string,
                             @Param('id', new ParseIntPipe()) id: number) {
-        const data = await this.walletService.getWalletByConsumerId(id);
+        const data = await this.walletService.getWalletByTravellerId(id);
         return data ? RestfulRes.success(res, messages.wallets.one.success, data) : RestfulRes.error(res, messages.wallets.one.failed);
     }
 }
