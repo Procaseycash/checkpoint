@@ -1,9 +1,9 @@
 import * as faker from 'faker';
 import {SEED_LENGTH} from "../config/app.config";
 
-const TRAVELLER = [];
+const TRAVELLERS = [];
 for (let i = 0; i < SEED_LENGTH; i++) {
-    TRAVELLER.push({
+    TRAVELLERS.push({
         _id: i + 1,
         first_name: faker.name.firstName(),
         last_name: faker.name.lastName(),
@@ -11,4 +11,4 @@ for (let i = 0; i < SEED_LENGTH; i++) {
         email: faker.internet.email().toLowerCase(),
     });
 }
-export default TRAVELLER;
+export default TRAVELLERS;

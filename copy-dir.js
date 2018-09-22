@@ -11,7 +11,7 @@ function copyDir() {
         fse.copySync('package.json', 'dist/package.json');
         fse.copySync('README.md', 'dist/README.md');
     } catch (e) {
-        console.log('Error from File Copy: ', e.message);
+        // console.log('Error from File Copy: ', e.message);
     }
 }
 

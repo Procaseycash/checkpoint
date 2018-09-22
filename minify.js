@@ -10,12 +10,12 @@ const minifier = require('minifier');
 let processMinifier = function (file, folder) {
   try {
       if (/.*(\.js|\.css)$/g.test(file)) {
-          console.info('start minification for ' + file);
+          // console.info('start minification for ' + file);
           const filePath = path.join(__dirname, 'dist/' + folder, file);
           minifier.minify(filePath, {output: filePath});
       }
   } catch (e) {
-    console.log('\nfailed=', e.message);
+    // console.log('\nfailed=', e.message);
   }
 };
 
@@ -24,14 +24,14 @@ let indepthFileProcess = function(newPath, checkFolder) {
   console.log({currentPath: currentPath});
   let file = '';
   const files = jetpack.list(path.join(__dirname, 'dist/' + currentPath));
-  console.log('\n files=', files.toString());
+  // console.log('\n files=', files.toString());
   for (let j = 0; j < files.length; j++) {
     file = files[j];
     if (file.indexOf('.min.') > -1) {
       continue;
     }
     if (file.indexOf('.') === -1) {
-      console.log('\n newFolder=', file);
+      // console.log('\n newFolder=', file);
       indepthFileProcess(currentPath + '/', file);
     } else {
       processMinifier(file, currentPath);
