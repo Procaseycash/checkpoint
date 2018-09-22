@@ -52,7 +52,7 @@ export class UserService {
         if (user['email']) user['email'] = undefined;
         if (user['type']) user['type'] = undefined;
         user = deepCopy(user);
-        const data = await repo.update({_id: user.id}, {$set: user});
+        const data = await repo.updateOne({_id: user.id}, {$set: user});
         if (!data['nModified']) throw new BadRequestException(messages.unable);
         return await this.getUserById(repo, user.id);
     }

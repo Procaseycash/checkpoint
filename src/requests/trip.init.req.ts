@@ -8,22 +8,16 @@ export class TripInitReq {
     @IsString()
     user_origin_location: string;
 
-    @ApiModelProperty({description: 'gps auto destination locator. use Latitude,Longitude without space or CountryCode,CityName'})
+    @ApiModelProperty({description: 'gps auto destination locator. use Latitude,Longitude  or CountryCode,CityName without space'})
     @MinLength(3)
     @IsDefined()
     @IsString()
     gps_origin_location: string;
 
-    @ApiModelProperty({description: 'user define current location. use Latitude,Longitude without space or CountryCode,CityName'})
+    @ApiModelProperty({description: 'user define current location. use Latitude,Longitude without space or CountryCode,CityName without space'})
     @MinLength(3)
     @IsDefined()
     @IsString()
     user_destination_location: string;
-
-    @ApiModelProperty({description: 'gps auto destination locator. use Latitude,Longitude without space or CountryCode,CityName'})
-    @MinLength(3)
-    @IsDefined()
-    @IsString()
-    gps_destination_location: string;
 
 }

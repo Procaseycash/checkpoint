@@ -1,5 +1,9 @@
 export const messages = {
     invalidURL: 'Invalid URL',
+    tripFailedEnd: 'Unable to end Trip, Please try again.',
+    tripFailedStart: 'Unable to Start Trip, Please use proper location',
+    tripOngoing: 'Trip has been initiated. Do not end trip until you get to your arrival to earn you point.',
+    tripEnd: 'Trip ended with your point calculated. Cheers.',
     paymentSuccessful: 'payment was successful',
     paymentFailed: 'Transaction Failed',
     generatedSecret: 'Secret Generated Successfully',
@@ -7,6 +11,7 @@ export const messages = {
     walletAlreadyExist: 'Wallet already exist for this account',
     moreThanOne: 'General Multiplier cannot be more than one',
     operationFailed: 'Failed to perform operation, please try again.',
+    currentTrip: 'Current trip fetched successfully',
     querySearched: 'Query searched was success',
     notAllowedToDelete: 'You are not eligible to perform this operation',
     logoutFailed: 'Failed to logout, please try again',

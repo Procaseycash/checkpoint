@@ -13,6 +13,9 @@ export const modelCounter = {
 };
 
 export const POINT_VALUE = 10;
+export const DEFAULT_PERCENTAGE = 10;
+export const DEFAULT_KILOMETER = 10;
+export const POINT_RATIO = 1; // for every 1$;
 
 export const CURRENCY = {
     name: 'Dollar',

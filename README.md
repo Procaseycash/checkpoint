@@ -115,6 +115,9 @@ Please choose an environment using the environment command stated above and then
 $ npm run db:seed:undo      
 ```
 
+## DISTANCE MATRIX API_KEY
+Please change the API_KEY from `config/app.config.ts` to a paid version API_KEY as the one in use is limited to few request/day. 
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://opencollective.com/nest).

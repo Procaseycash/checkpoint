@@ -91,14 +91,14 @@ export class ServicesService {
         const dbUser = await this.userRepo.findOne({_id: user.id});
         if (!(password.verify(passwordSettings.old_password, dbUser.password))) throw new BadRequestException(messages.oldPasswordDoNotMatch);
         if (password.verify(passwordSettings.new_password, dbUser.password)) throw new BadRequestException(messages.previousPassDisallowed);
-        const data = await this.userRepo.update({_id: user.id}, {$set: {password: password.hash(passwordSettings.new_password)}});
+        const data = await this.userRepo.updateOne({_id: user.id}, {$set: {password: password.hash(passwordSettings.new_password)}});
         if (!data['nModified']) throw new BadRequestException(messages.unable);
         return true;
     }
 
     async logout(status, ref_token) {
         Session.redis.del(`user:session:${ref_token}`);
-        const data = await this.loginInfoRepo.update({ref_token}, {$set: {status}});
+        const data = await this.loginInfoRepo.updateOne({ref_token}, {$set: {status}});
         if (!data['nModified'] && status !== LogoutEnum.SYSADMIN) throw new BadRequestException(messages.logoutFailed);
         return true;
     }
@@ -111,7 +111,7 @@ export class ServicesService {
         } else throw new BadRequestException(messages.noFound);
         const pwd = 'CP@' + generateKey().substring(0, 6);
         user['password'] = pwd;
-        const data = await this.userRepo.update({_id: user['id']}, {$set: {password: password.hash(pwd)}});
+        const data = await this.userRepo.updateOne({_id: user['id']}, {$set: {password: password.hash(pwd)}});
         if (!data['nModified']) throw new BadRequestException(messages.newPasswordGenFailed);
         this.sendNewPasswordByMail(user);
         return true;

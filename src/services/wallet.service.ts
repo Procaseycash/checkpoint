@@ -6,7 +6,7 @@ import {Counter} from '../models/counter';
 import {ReqInstance} from '../shared/interceptors/req.instance';
 import {messages} from '../config/messages.conf';
 import {CURRENCY, modelCounter} from '../config/constants.conf';
-import {MerchantService} from "./merchant.service";
+import {MerchantService} from './merchant.service';
 
 @Component()
 export class WalletService {
@@ -32,7 +32,7 @@ export class WalletService {
     }
 
     public async update(wallet: { amount: number, id: number }) {
-        const data = await this.walletRepo.update({_id: wallet.id}, {$set: {amount: wallet.amount}});
+        const data = await this.walletRepo.updateOne({_id: wallet.id}, {$set: {amount: wallet.amount}});
         if (!data['nModified']) throw new BadRequestException(messages.unable);
         return await this.getWalletById(wallet.id);
     }
@@ -53,6 +53,14 @@ export class WalletService {
 
     async getByWalletNo(wallet_no) {
         return await this.walletRepo.findOne({wallet_no}).populate('traveller').exec();
+    }
+
+    async topUserWallet(payload: {amount: number, id: number}) {
+        const wallet = await this.walletRepo.findOne({traveller: payload.id});
+        if (!wallet) return await this.create({amount: payload.amount});
+        payload.amount += wallet.amount;
+        payload.id = wallet._id;
+        return await this.update(payload);
     }
 
     async getByWalletNoUsingMerchantSecret(secret, wallet_no) {

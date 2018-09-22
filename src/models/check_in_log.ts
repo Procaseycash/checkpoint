@@ -7,7 +7,9 @@ export interface CheckInLog extends Document {
     readonly user_destination_location: string;
     readonly gps_destination_location: string;
     readonly kilometer: string;
-    readonly point: string;
-    readonly amount: string;
+    readonly point: number;
+    readonly amount: number;
+    readonly total_time: string;
     readonly status: string;
+    readonly currency: string;
 }

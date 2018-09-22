@@ -21,7 +21,7 @@ export class UserController {
     }
 
     @ApiOAuth2Auth()
-    @Roles(UserEnum.DRIVER, UserEnum.MERCHANT, UserEnum.TRAVELLER, UserEnum.SYSADMIN)
+    @Roles(UserEnum.MERCHANT, UserEnum.TRAVELLER, UserEnum.SYSADMIN)
     @Patch(':id/change_password')
     async changePassword(@Response() res, @Headers('Authorization') authorization: string, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
         const data = await this.servicesService.changePassword(passwordSettings);

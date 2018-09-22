@@ -12,6 +12,8 @@ import {UserEnum} from '../enums/user.enum';
 import {Roles} from '../shared/decorators/roles.decorator';
 import {TransactionService} from "../services/transaction.service";
 import {WalletService} from "../services/wallet.service";
+import {TripInitReq} from "../requests/trip.init.req";
+import {TripEndReq} from "../requests/trip.end.req";
 
 @ApiUseTags('travellers')
 @Controller('travellers')
@@ -38,8 +40,11 @@ export class TravellerController {
     }
 
     @Get()
-    @ApiOperation({title: 'Get intentionally exposed', description: 'For the sake of test purposes, we expose the get travellers, ' +
-    'use traveller Id on the authorize on swagger. This might return a list of users with same ID but pick the token of type that is traveller and use it in authorization'})
+    @ApiOperation({
+        title: 'Get intentionally exposed',
+        description: 'For the sake of test purposes, we expose the get travellers, ' +
+        'use traveller Id on the authorize on swagger. This might return a list of users with same ID but pick the token of type that is traveller and use it in authorization'
+    })
     async findAll(@Response() res, @Request() request) {
         const data = await this.travellerService.findAll();
         return data ? RestfulRes.success(res, messages.users.list.success, data) : RestfulRes.error(res, messages.users.list.failed);
@@ -86,8 +91,35 @@ export class TravellerController {
     @Roles(UserEnum.TRAVELLER)
     @Get(':id/wallets')
     async fetchByTravellerId(@Response() res, @Headers('Authorization') authorization: string,
-                            @Param('id', new ParseIntPipe()) id: number) {
+                             @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.walletService.getWalletByTravellerId(id);
         return data ? RestfulRes.success(res, messages.wallets.one.success, data) : RestfulRes.error(res, messages.wallets.one.failed);
+    }
+
+    @ApiOAuth2Auth()
+    @Roles(UserEnum.TRAVELLER)
+    @Post('init-trip')
+    async initTrip(@Response() res, @Headers('Authorization') authorization: string,
+                   @Body() tripPayload: TripInitReq) {
+        const data = await this.travellerService.initTrip(tripPayload);
+        return data ? RestfulRes.success(res, messages.tripOngoing, data) : RestfulRes.error(res, messages.tripFailedStart);
+    }
+
+
+    @ApiOAuth2Auth()
+    @Roles(UserEnum.TRAVELLER)
+    @Post('end-trip')
+    async endTrip(@Response() res, @Headers('Authorization') authorization: string,
+                  @Body() tripPayload: TripEndReq) {
+        const data = await this.travellerService.endTrip(tripPayload);
+        return data ? RestfulRes.success(res, messages.tripEnd, data) : RestfulRes.error(res, messages.tripFailedEnd);
+    }
+
+    @ApiOAuth2Auth()
+    @Roles(UserEnum.TRAVELLER)
+    @Get('current-trip')
+    async currentTrip(@Response() res, @Headers('Authorization') authorization: string) {
+        const data = await this.travellerService.findCurrentTrip();
+        return data ? RestfulRes.success(res, messages.currentTrip, data) : RestfulRes.error(res, messages.operationFailed);
     }
 }

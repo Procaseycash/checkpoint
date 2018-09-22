@@ -64,7 +64,7 @@ export class TransactionService {
     }
 
     public async update(payload: { id: number, status: string, payment_reference: string }) {
-        const data = await this.transactionRepo.update({_id: payload.id}, {
+        const data = await this.transactionRepo.updateOne({_id: payload.id}, {
             $set: {
                 status: payload.status,
                 payment_reference: payload.payment_reference,

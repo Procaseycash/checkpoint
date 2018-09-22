@@ -1,5 +1,7 @@
 import * as mongoose from 'mongoose';
+import * as mongooseDouble from 'mongoose-double';
 
+mongooseDouble(mongoose);
 const Schema = mongoose.Schema;
 const CheckInLogSchema = new Schema({
     _id: Number,
@@ -8,9 +10,11 @@ const CheckInLogSchema = new Schema({
     gps_origin_location: String,
     user_destination_location: String,
     gps_destination_location: String,
+    currency: Schema.Types.Mixed,
     kilometer: String,
-    point: String,
-    amount: String,
+    total_time: String,
+    point: Schema.Types.Double,
+    amount: Schema.Types.Double,
     status: String,
 }, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}});
 

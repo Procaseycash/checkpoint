@@ -1,0 +1,5 @@
+export enum TripEnum {
+    COMPLETED = 'COMPLETED',
+    ONGOING = 'ONGOING',
+    MIDWAY_COMPLETION = 'MIDWAY_COMPLETION',
+}

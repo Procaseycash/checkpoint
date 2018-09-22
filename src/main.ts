@@ -51,7 +51,7 @@ async function bootstrap() {
     app.useGlobalInterceptors(reqInstanceInterceptor, authorizationInterceptor);
     app.setGlobalPrefix(API_VERSION);
     Mail.setEngine(MailEnum.MAILGUN); // set a default mailing system.
-    Session.startRedis(); // start a single instance of redis and reuse globally
+    await Session.startRedis(); // start a single instance of redis and reuse globally
     MockPayment.defaultPaymentMethod = PaymentMethodEnum.PAYSTACK; // payment method used for paying a merchant from traveller wallet to merchant account
     console.log('engine=', Mail.getEngine(), 'port=', PORT);
     Swagger.configure();

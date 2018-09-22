@@ -24,3 +24,20 @@ export class TransactionFailure extends NotFoundException {
         super(`Transaction failed, please try again`);
     }
 }
+
+export class LocationNotFound extends NotFoundException {
+    constructor() {
+        super(`Location not found, please try again`);
+    }
+}
+
+export class CurrentLocationNotFound extends NotFoundException {
+    constructor() {
+        super(`Current location not found, please try again`);
+    }
+}
+export class UnknownTrip extends NotFoundException {
+    constructor() {
+        super(`Trip Information not found, please try again`);
+    }
+}

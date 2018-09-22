@@ -6,11 +6,11 @@ export class TripEndReq {
     @MinLength(3)
     @IsDefined()
     @IsString()
-    latitude: string;
+    destination_latitude: string;
 
     @ApiModelProperty({description: 'current destination longitude.'})
     @MinLength(3)
     @IsDefined()
     @IsString()
-    longitude: string;
+    destination_longitude: string;
 }
