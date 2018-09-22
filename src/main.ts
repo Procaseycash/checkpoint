@@ -16,7 +16,7 @@ import {API_VERSION, PORT} from './config/app.config';
 import {SharedModule} from './modules/shared.module';
 import {Session} from './session/session';
 import {ReqInstanceInterceptor} from 'shared/interceptors/req.instance.interceptor';
-import {SessionManagerInterceptor} from 'shared/interceptors/session.manager.interceptor';
+import {AuthorizationInterceptor} from 'shared/interceptors/authorization.interceptor';
 
 const expressInstance = express();
 expressInstance.engine('html', consolidate.swig);
@@ -29,6 +29,8 @@ expressInstance.use(fileUpload({
     limits: {fileSize: 20 * 1024 * 1024},
 }));
 
+expressInstance.get('/', (req, res) => res.redirect('api/'));
+
 /**
  * Application bootstrap
  * @returns {Promise<void>}
@@ -39,11 +41,11 @@ async function bootstrap() {
     const validatorPipe = app.select(ValidationModule).get(ValidatorPipe);
     const httpExceptionFilter = app.select(SharedModule).get(HttpExceptionFilter);
     const reqInstanceInterceptor = app.select(SharedModule).get(ReqInstanceInterceptor);
-    const sessionManagerInterceptor = app.select(SharedModule).get(SessionManagerInterceptor);
+    const authorizationInterceptor = app.select(SharedModule).get(AuthorizationInterceptor);
     app.useGlobalPipes(validatorPipe);
     app.useGlobalGuards(authGuard);
     app.useGlobalFilters(httpExceptionFilter);
-    app.useGlobalInterceptors(reqInstanceInterceptor, sessionManagerInterceptor);
+    app.useGlobalInterceptors(reqInstanceInterceptor, authorizationInterceptor);
     app.setGlobalPrefix(API_VERSION);
     Mail.setEngine(MailEnum.MAILGUN);
     Session.startRedis();

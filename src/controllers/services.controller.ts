@@ -8,6 +8,7 @@ import {EmailReq} from '../requests/email.req';
 import {jwt} from '../utils/jwt';
 import {LogoutEnum} from '../enums/logout.enum';
 import {LogoutReq} from '../requests/logout.req';
+import {ReqInstance} from "../shared/interceptors/req.instance";
 
 @ApiUseTags('services')
 @Controller('services')
@@ -23,7 +24,7 @@ export class ServicesController {
 
     @Post('account/logout')
     async logout(@Response() res, @Request() req, @Body() logoutReq: LogoutReq) {
-        const user = jwt.decode(req.headers.authorization);
+        const user = ReqInstance.req.user;
         const logout_by = (logoutReq && logoutReq.logout_by) ? logoutReq.logout_by : LogoutEnum.USER;
         const data = await this.servicesService.logout(logout_by, user.ref_token);
         return RestfulRes.success(res, messages.logoutSuccess, data);

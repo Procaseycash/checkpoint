@@ -6,6 +6,7 @@ function copyDir() {
         fse.copySync('src/config/rsa-keys', 'dist/config/rsa-keys');
         fse.copySync('src/storage', 'dist/storage');
         fse.copySync('src/config/config.json', 'dist/config/config.json');
+        fse.copySync('src/config/config.json', 'dist/config/currency.json');
         fse.copySync('package.json', 'dist/package.json');
         fse.copySync('package.json', 'dist/package.json');
         fse.copySync('README.md', 'dist/README.md');

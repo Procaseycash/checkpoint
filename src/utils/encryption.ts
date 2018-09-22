@@ -5,7 +5,7 @@ import * as fs from 'fs';
 const filePath = path.resolve(__dirname, '../config/rsa-keys/');
 const privateKey = fs.readFileSync(filePath + '/' + 'privateKey.pem').toString();
 const publicKey = fs.readFileSync(filePath + '/' + 'publicKey.pem').toString();
-export const encryption = {
+export const ENCRYPTION = {
     encode(data) {
         const letEncrypt = new JsEncrypt();
         letEncrypt.setPublicKey(publicKey);

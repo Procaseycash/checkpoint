@@ -7,9 +7,11 @@ import {ENV} from '../env';
 import {Mail} from './mail';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as faker from 'faker';
 import * as mustache from 'mustache';
 import {EmailSettings} from '../config/mail.conf';
 import {WEB_URL} from '../config/app.config';
+import {ENCRYPTION} from "./encryption";
 
 const mailFilePath = path.resolve(__dirname, '../public/views/mails');
 
@@ -251,3 +253,8 @@ export const getNextSequenceValue = async (repo, sequenceName) => {
     console.log({sequenceDocument});
     return sequenceDocument.seq;
 };
+
+export const generateKey = () => {
+    return ENCRYPTION.encode(faker.random.uuid + new Date().getTime()).substring(0, 20);
+};
+

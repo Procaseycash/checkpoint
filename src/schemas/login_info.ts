@@ -4,7 +4,8 @@ import * as mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const LoginInfoSchema = new Schema({
     _id: Number,
-    user: Schema.Types.ObjectId,
+    user: Number,
+    type: String,
     status: {type: String, lowercase: false, trim: true},
     ip_address: String,
     ref_token: String,

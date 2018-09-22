@@ -2913,7 +2913,7 @@ var RSAKey = /** @class */ (function () {
         }
     };
     // RSAKey.prototype.encrypt = RSAEncrypt;
-    // Return the PKCS#1 RSA encryption of "text" as an even-length hex string
+    // Return the PKCS#1 RSA ENCRYPTION of "text" as an even-length hex string
     RSAKey.prototype.encrypt = function (text) {
         var m = pkcs1pad2(text, (this.n.bitLength() + 7) >> 3);
         if (m == null) {
@@ -3105,7 +3105,7 @@ function pkcs1unpad2(d, n) {
     }
     return ret;
 }
-// Return the PKCS#1 RSA encryption of "text" as a Base64-encoded string
+// Return the PKCS#1 RSA ENCRYPTION of "text" as a Base64-encoded string
 // function RSAEncryptB64(text) {
 //  var h = this.encrypt(text);
 //  if(h) return hex2b64(h); else return null;

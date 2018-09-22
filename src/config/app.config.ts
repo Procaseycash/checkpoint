@@ -1,6 +1,6 @@
 import {ENV} from '../env';
 import {HttpStatus} from '@nestjs/common';
-import {Session} from "../session/session";
+import {Session} from '../session/session';
 
 export const APP_ENV = ENV.current();
 export const PORT = (APP_ENV === 'production') ? 6001 : (APP_ENV === 'test') ? 6002 : 6000;
@@ -20,18 +20,9 @@ export const WEB_URL = {
         site: 'http://checkpoint.upltest.com',
     },
 };
+
 export const APP_ERROR_CODES = [
     HttpStatus.OK, HttpStatus.BAD_REQUEST, HttpStatus.NOT_FOUND,
     HttpStatus.UNAUTHORIZED, HttpStatus.NOT_ACCEPTABLE, HttpStatus.ACCEPTED,
     HttpStatus.CREATED, HttpStatus.FORBIDDEN,
 ];
-
-export const sessionTimeoutPeriod = async () => {
-    const data = await Session.redis.getAsync('SESSION_TIMEOUT_PERIOD');
-    console.log('session=', data);
-    if (!data) {
-        await Session.redis.setAsync('SESSION_TIMEOUT_PERIOD', 5 * 60);
-        return await Session.redis.getAsync('SESSION_TIMEOUT_PERIOD');
-    }
-    return data;
-};

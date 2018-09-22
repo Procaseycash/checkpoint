@@ -1,7 +1,8 @@
 import { Document } from 'mongoose';
 
 export interface LoginInfo extends Document {
-    readonly user: any;
+    readonly user: number;
+    readonly type: string;
     readonly status: string;
     readonly ip_address: string;
     readonly ref_token: string;

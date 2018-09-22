@@ -1,5 +1,7 @@
 export const messages = {
     invalidURL: 'Invalid URL',
+    merchantSecretInValid: 'Invalid Merchant Secret',
+    walletAlreadyExist: 'Wallet already exist for this account',
     moreThanOne: 'General Multiplier cannot be more than one',
     operationFailed: 'Failed to perform operation, please try again.',
     querySearched: 'Query searched was success',
@@ -39,6 +41,7 @@ export const messages = {
     unassign: 'You cannot unassign selected information due to its usage by one or more resources',
     removeAsDefault: 'You cannot delete an information set as default. Please remove as default and try again',
     failed: 'No Data found',
+    failedCreation: 'Information to be created failed, please try again.',
     failedToToggle: 'Toggle failed',
     failedToDelete: 'Delete Operation Failed.',
     deleteSuccess: 'This information was successfully deleted',
@@ -62,6 +65,18 @@ export const messages = {
         one: {
             success: 'user was successfully fetched',
             failed: 'No User found',
+        },
+    },
+    wallets: {
+            created: 'Wallet successfully created',
+        updated: 'Wallet successfully update',
+        list: {
+            success: 'Wallets paginated list was successful',
+            failed: 'No data found',
+        },
+        one: {
+            success: 'Wallet was successfully fetched',
+            failed: 'No Wallet found',
         },
     },
     history: {

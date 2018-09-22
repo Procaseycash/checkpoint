@@ -4,13 +4,15 @@ import {DbModule} from './db.module';
 import {UserModule} from './user.module';
 import {ServicesController} from '../controllers/services.controller';
 import {
-    counterRepo, loginInfoRepo, searchHistoryRepo,
+    counterRepo, loginInfoRepo, checkInLogRepo, transactionRepo, walletRepo,
 } from '../repos/models.repository';
 import {ServicesService} from '../services/services.service';
 import {DecodeEncryptedRequestInterceptor} from '../shared/interceptors/decode.encrypted.request.interceptor';
 import {HttpModule} from '@nestjs/common/http';
-import {ReqInstanceInterceptor} from "../shared/interceptors/req.instance.interceptor";
-import {SessionManagerInterceptor} from "../shared/interceptors/session.manager.interceptor";
+import {ReqInstanceInterceptor} from '../shared/interceptors/req.instance.interceptor';
+import {WalletService} from "../services/wallet.service";
+import {TransactionService} from "../services/transaction.service";
+import {AuthorizationInterceptor} from "../shared/interceptors/authorization.interceptor";
 
 @Module({
     imports: [
@@ -21,22 +23,30 @@ import {SessionManagerInterceptor} from "../shared/interceptors/session.manager.
     components: [
         ...loginInfoRepo,
         ...counterRepo,
-        ...searchHistoryRepo,
+        ...checkInLogRepo,
+        ...transactionRepo,
+        ...walletRepo,
+        WalletService,
         ServicesService,
+        TransactionService,
         HttpExceptionFilter,
+        AuthorizationInterceptor,
         ReqInstanceInterceptor,
         DecodeEncryptedRequestInterceptor,
-        SessionManagerInterceptor,
     ],
     exports: [
         ...loginInfoRepo,
         ...counterRepo,
-        ...searchHistoryRepo,
+        ...checkInLogRepo,
+        ...transactionRepo,
+        ...walletRepo,
+        WalletService,
         HttpExceptionFilter,
+        AuthorizationInterceptor,
         ServicesService,
+        TransactionService,
         DecodeEncryptedRequestInterceptor,
         ReqInstanceInterceptor,
-        SessionManagerInterceptor,
         DbModule,
     ],
     controllers: [ServicesController],
