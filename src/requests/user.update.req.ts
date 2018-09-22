@@ -1,4 +1,4 @@
-import {IsDefined, IsEmail, IsInt, IsString, Min, MinLength} from 'class-validator';
+import {IsDefined, IsEmail, IsInt, IsOptional, IsString, Min, MinLength} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
 
 export class UserUpdateReq {
@@ -9,8 +9,8 @@ export class UserUpdateReq {
     @Min(1)
     id: number;
 
-    @ApiModelProperty({description: 'Phone number of an account'})
-    @IsDefined()
+    @ApiModelProperty({description: 'Phone number of an account', required: false})
+    @IsOptional()
     @MinLength(11)
     phone_no: string;
 

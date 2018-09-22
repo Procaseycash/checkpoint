@@ -22,6 +22,7 @@ export class Swagger {
             .addTag('consumers', 'These are APIs belonging to a user that can check in to a location')
             .addTag('merchants', 'These are APIs belonging to Merchant that have integrated to CheckPoint App for customer point payments')
             .addTag('users', 'These are APIs pertaining to general user accounts be it consumers, mrchants or drivers')
+            .addTag('wallets', 'These are APIs pertaining to consumers\' wallets')
             .addTag('services', 'These are APIs pertaining to general services')
             .build();
     }

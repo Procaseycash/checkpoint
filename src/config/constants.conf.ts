@@ -19,3 +19,10 @@ export const CURRENCY = {
     char: '$',
     html: '&#36;',
 };
+
+export const PAYMENT_STATUS_CODES = {
+    paystackSuccess: 200,
+    paystackFailed: 400,
+    remitaSuccess: '00',
+    remitaFailed: '01',
+};

@@ -5,13 +5,15 @@ import {Model} from 'mongoose';
 import {Counter} from '../models/counter';
 import {ReqInstance} from '../shared/interceptors/req.instance';
 import {messages} from '../config/messages.conf';
-import {CURRENCY, modelCounter} from '../config/constants.conf';
+import {CURRENCY, modelCounter, PAYMENT_STATUS_CODES} from '../config/constants.conf';
 import * as faker from 'faker';
 import {TransactionReq} from '../requests/transaction.req';
 import {TransactionEnum} from '../enums/transaction.enum';
 import {MerchantService} from './merchant.service';
 import {WalletService} from './wallet.service';
-import {ENCRYPTION} from "../utils/encryption";
+import {ENCRYPTION} from '../utils/encryption';
+import {InsufficientBalance, TransactionFailure} from '../shared/filters/throwable.not.found';
+import {MockPayment} from '../utils/mock.payment';
 
 @Component()
 export class TransactionService {
@@ -21,10 +23,29 @@ export class TransactionService {
                 @Inject('CounterRepo') private readonly counterRepo: Model<Counter>) {
     }
 
-    public async create(payload: TransactionReq) {
+    public async makePayment(payload: TransactionReq) {
+        const consumerWallet = await this.walletService.getByWalletNo(payload.wallet_no);
+        if (consumerWallet.amount < payload.amount) throw new InsufficientBalance(consumerWallet.amount);
         const merchantSecret = ENCRYPTION.decode(ReqInstance.req.headers.merchant_secret);
         const validateMerchant = await this.merchantService.validateMerchant(merchantSecret);
         if (!validateMerchant) throw new BadRequestException(messages.merchantSecretInValid);
+        const storeInitTransaction = await this.create(payload);
+        if (!storeInitTransaction) throw new TransactionFailure();
+        merchantSecret.merchant_secret = undefined;
+        merchantSecret.merchant_key = undefined;
+        const pay = await MockPayment.pay(Object.assign(payload, merchantSecret));
+        if (!(pay.status_code === PAYMENT_STATUS_CODES.remitaSuccess
+                || pay.status_code === PAYMENT_STATUS_CODES.paystackSuccess)) throw new TransactionFailure();
+        consumerWallet.amount -= payload.amount;
+        await this.walletService.update(consumerWallet); // deduct amount paid from wallet
+        return await this.update({
+            id: storeInitTransaction._id,
+            status: TransactionEnum.PAID,
+            payment_reference: pay.payment_reference,
+        });
+    }
+
+    public async create(payload: TransactionReq) {
         const transaction_reference = faker.random.uuid();
         const merchant = await this.merchantService.getMerchantByKey(ReqInstance.req.headers.merchant_key);
         const wallet = await this.walletService.getByWalletNo(payload.wallet_no);
@@ -42,8 +63,13 @@ export class TransactionService {
         return await this.transactionRepo.create(transaction);
     }
 
-    public async update(payload: { id: number, status: string }) {
-        const data = await this.transactionRepo.update({_id: payload.id}, {$set: {status: payload.status}});
+    public async update(payload: { id: number, status: string, payment_reference: string }) {
+        const data = await this.transactionRepo.update({_id: payload.id}, {
+            $set: {
+                status: payload.status,
+                payment_reference: payload.payment_reference,
+            },
+        });
         if (!data['nModified']) throw new BadRequestException(messages.unable);
         return await this.getTransactionById(payload.id);
     }
@@ -59,11 +85,25 @@ export class TransactionService {
     }
 
     async getTransactionByConsumerId(id: number) {
-        return await this.transactionRepo.find({consumer: id}).populate('consumer').populate('merchant').exec();
+        const info = getOffsetAndCateria(ReqInstance.req);
+        const result = await this.transactionRepo.find({consumer: id}).populate('consumer').populate('merchant')
+            .sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
+        return await getPaginated(result, this.transactionRepo, info);
     }
 
     async getTransactionByMerchantId(id: number) {
-        return await this.transactionRepo.find({merchant: id}).populate('consumer').populate('merchant').exec();
+        const info = getOffsetAndCateria(ReqInstance.req);
+        const result = await this.transactionRepo.find({merchant: id}).populate('consumer').populate('merchant')
+            .sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
+        return await getPaginated(result, this.transactionRepo, info);
+    }
+
+    async getTransactionByMerchantSecret(secret: string) {
+        const info = getOffsetAndCateria(ReqInstance.req);
+        const merchant = await this.merchantService.decryptMerchantSecret({secret});
+        const result = await this.transactionRepo.find({merchant: merchant['id']}).populate('consumer').populate('merchant')
+            .sort({_id: 1}).skip(info.offset).limit(info.nPerPage).exec();
+        return await getPaginated(result, this.transactionRepo, info);
     }
 
     async findAll() {

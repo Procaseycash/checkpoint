@@ -29,7 +29,7 @@ export class WalletService {
         return await this.getWalletById(wallet._id);
     }
 
-    public async update(wallet) {
+    public async update(wallet: {amount: number , id: number}) {
         const data = await this.walletRepo.update({_id: wallet.id}, {$set: {amount: wallet.amount}});
         if (!data['nModified']) throw new BadRequestException(messages.unable);
         return await this.getWalletById(wallet.id);

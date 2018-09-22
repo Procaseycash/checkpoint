@@ -1,4 +1,4 @@
-import {Component, Inject} from '@nestjs/common';
+import {Component, Inject, UnauthorizedException} from '@nestjs/common';
 import {Merchant} from '../models/merchant';
 import {generateKey, getOffsetAndCateria, getPaginated, password} from '../utils/utils';
 import {Model} from 'mongoose';
@@ -7,12 +7,15 @@ import {CheckInLog} from '../models/check_in_log';
 import {ReqInstance} from '../shared/interceptors/req.instance';
 import {UserService} from './user.service';
 import {UserEnum} from '../enums/user.enum';
+import {ENCRYPTION} from '../utils/encryption';
+import {User} from '../models/user';
 
 
 @Component()
 export class MerchantService {
     constructor(@Inject('MerchantRepo') private readonly merchantRepo: Model<Merchant>,
                 private readonly userService: UserService,
+                @Inject('UserRepo') private readonly userRepo: Model<User>,
                 @Inject('CheckInLogRepo') private readonly checkInLogRepo: Model<CheckInLog>,
                 @Inject('CounterRepo') private readonly counterRepo: Model<Counter>) {
     }
@@ -44,6 +47,23 @@ export class MerchantService {
     async validateMerchant(merchant: { email: string, password: string }): Promise<boolean> {
         const data = await this.merchantRepo.findOne({email: merchant.email});
         return (data && data.email === merchant.email && password.verify(merchant.password, data.password));
+    }
+
+    async generateMerchantSecret(merchant: { email: string, password: string }): Promise<string> {
+        const data = await this.userRepo.findOne({email: merchant.email});
+        if (!(data && data.email === merchant.email && password.verify(merchant.password, data.password))) throw new UnauthorizedException();
+        const merchantData = await this.merchantRepo.findOne({email: merchant.email});
+        return ENCRYPTION.encode(Object.assign(data, merchantData));
+    }
+
+    async decryptMerchantSecret(merchant: { secret: string }): Promise<Merchant> {
+        const decodedSecret = ENCRYPTION.decode(merchant.secret);
+        const merchantData = await this.merchantRepo.findOne({
+            email: decodedSecret.email,
+            merchant_key: decodedSecret.merchant_key,
+        });
+        if (!merchantData) throw new UnauthorizedException();
+        return decodedSecret;
     }
 
     async findAll() {

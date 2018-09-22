@@ -13,6 +13,7 @@ import {ReqInstanceInterceptor} from '../shared/interceptors/req.instance.interc
 import {WalletService} from "../services/wallet.service";
 import {TransactionService} from "../services/transaction.service";
 import {AuthorizationInterceptor} from "../shared/interceptors/authorization.interceptor";
+import {WalletController} from "../controllers/wallet.controller";
 
 @Module({
     imports: [
@@ -49,7 +50,7 @@ import {AuthorizationInterceptor} from "../shared/interceptors/authorization.int
         ReqInstanceInterceptor,
         DbModule,
     ],
-    controllers: [ServicesController],
+    controllers: [ServicesController, WalletController],
 })
 export class SharedModule {
 

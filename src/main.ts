@@ -18,6 +18,8 @@ import {Session} from './session/session';
 import {ReqInstanceInterceptor} from './shared/interceptors/req.instance.interceptor';
 import {AuthorizationInterceptor} from './shared/interceptors/authorization.interceptor';
 import * as clc from 'cli-color';
+import {PaymentMethodEnum} from "./enums/payment.method.enum";
+import {MockPayment} from "./utils/mock.payment";
 
 const expressInstance = express();
 expressInstance.engine('html', consolidate.swig);
@@ -48,8 +50,9 @@ async function bootstrap() {
     app.useGlobalFilters(httpExceptionFilter);
     app.useGlobalInterceptors(reqInstanceInterceptor, authorizationInterceptor);
     app.setGlobalPrefix(API_VERSION);
-    Mail.setEngine(MailEnum.MAILGUN);
-    Session.startRedis();
+    Mail.setEngine(MailEnum.MAILGUN); // set a default mailing system.
+    Session.startRedis(); // start a single instance of redis and reuse globally
+    MockPayment.defaultPaymentMethod = PaymentMethodEnum.PAYSTACK; // payment method used for paying a merchant from consumer wallet to merchant account
     console.log('engine=', Mail.getEngine(), 'port=', PORT);
     Swagger.configure();
     Swagger.setup(app);

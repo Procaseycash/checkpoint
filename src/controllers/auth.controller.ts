@@ -30,7 +30,7 @@ export class AuthController {
     }
 
     @Get(':id')
-    @ApiOperation({title: 'This is used get tokens of all different type of users with specify ID'})
+    @ApiOperation({title: 'This is used to get tokens of all different type of users with specify ID and pick the token as authorization header'})
     async getUserTokenById(@Response() res, @Request() req, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.servicesService.getToken(id);
         console.log('resp=', data);

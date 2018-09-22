@@ -10,11 +10,15 @@ import {UserEnum} from '../enums/user.enum';
 import {Roles} from '../shared/decorators/roles.decorator';
 import {MerchantUpdateReq} from "../requests/merchant.update.req";
 import {MerchantReq} from "../requests/merchant.req";
+import {MerchantSecreteReq} from "../requests/merchant.secrete.req";
+import {TransactionService} from "../services/transaction.service";
+import {TransactionReq} from "../requests/transaction.req";
 
 @ApiUseTags('merchants')
 @Controller('merchants')
 export class MerchantController {
-    constructor(private merchantService: MerchantService) {
+    constructor(private readonly merchantService: MerchantService,
+                private readonly transactionService: TransactionService) {
     }
 
     @Post()
@@ -26,14 +30,60 @@ export class MerchantController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.MERCHANT)
+    @Post('generate-secret')
+    async generateSecret(@Response() res, @Headers('Authorization') authorization: string, @Request() req, @Body() merchant: MerchantSecreteReq) {
+        const data = await this.merchantService.generateMerchantSecret(merchant);
+        return data ? RestfulRes.success(res, messages.generatedSecret, data) : RestfulRes.error(res, messages.operationFailed);
+    }
+
+    @ApiOAuth2Auth()
+    @Roles(UserEnum.MERCHANT)
+    @Post('pay')
+    async makePayment(@Response() res,
+                      @Headers('merchant_secret') merchant_secret: string,
+                      @Headers('merchant_key') merchant_key: string,
+                      @Request() req, @Body() transaction: TransactionReq) {
+        const data = await this.transactionService.makePayment(transaction);
+        return data ? RestfulRes.success(res, messages.paymentSuccessful, data) : RestfulRes.error(res, messages.paymentFailed);
+    }
+
+    @Get('transactions')
+    async getTransactionsUsingSecret(@Response() res,
+                                     @Headers('merchant_secret') merchant_secret: string,
+                                     @Headers('merchant_key') merchant_key: string,
+                                     @Request() req) {
+        const data = await this.transactionService.getTransactionByMerchantSecret(merchant_secret);
+        return data ? RestfulRes.success(res, messages.list, data) : RestfulRes.error(res, messages.operationFailed);
+    }
+
+    @ApiOAuth2Auth()
+    @Roles(UserEnum.MERCHANT)
+    @Get(':id/transactions')
+    async getTransactions(@Response() res,
+                          @Param('id', new ParseIntPipe()) id: number,
+                          @Headers('Authorization') authorization: string,
+                          @Request() req) {
+        const data = await this.transactionService.getTransactionByMerchantId(id);
+        return data ? RestfulRes.success(res, messages.list, data) : RestfulRes.error(res, messages.operationFailed);
+    }
+
+    @ApiOAuth2Auth()
+    @Roles(UserEnum.MERCHANT)
     @Put(':id')
     @ApiOperation({title: 'Phone number is optional'})
-    async update(@Response() res, @Request() req,  @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() merchant: MerchantUpdateReq) {
+    async update(@Response() res, @Request() req,
+                 @Headers('Authorization') authorization: string,
+                 @Param('id', new ParseIntPipe()) id: number, @Body() merchant: MerchantUpdateReq) {
         const data = await this.merchantService.update(merchant);
         return data ? RestfulRes.success(res, messages.users.updated, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
     @Get()
+    @ApiOperation({
+        title: 'Get intentionally exposed',
+        description: 'For the sake of test purposes, we expose the get merchants, ' +
+        'use merchant Id on the authorize on swagger. This might return a list of users with same ID but pick the token of type that is merchant and use it in authorization'
+    })
     async findAll(@Response() res, @Request() request) {
         const data = await this.merchantService.findAll();
         return data ? RestfulRes.success(res, messages.users.list.success, data) : RestfulRes.error(res, messages.users.list.failed);

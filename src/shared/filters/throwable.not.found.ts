@@ -11,3 +11,16 @@ export class UserNotFoundException extends NotFoundException {
         super('User not found.');
     }
 }
+
+
+export class InsufficientBalance extends NotFoundException {
+    constructor(walletAmount?: number) {
+        super(`Insufficient Balance in Customer Wallet. Customer Balance is : ${walletAmount}`);
+    }
+}
+
+export class TransactionFailure extends NotFoundException {
+    constructor() {
+        super(`Transaction failed, please try again`);
+    }
+}

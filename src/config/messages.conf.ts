@@ -1,5 +1,8 @@
 export const messages = {
     invalidURL: 'Invalid URL',
+    paymentSuccessful: 'payment was successful',
+    paymentFailed: 'Transaction Failed',
+    generatedSecret: 'Secret Generated Successfully',
     merchantSecretInValid: 'Invalid Merchant Secret',
     walletAlreadyExist: 'Wallet already exist for this account',
     moreThanOne: 'General Multiplier cannot be more than one',

@@ -17,8 +17,10 @@ export class WalletController {
     constructor(private walletService: WalletService) {
     }
 
+    @ApiOAuth2Auth()
+    @Roles(UserEnum.CONSUMER)
     @Post()
-    async post(@Response() res, @Request() req, @Body() wallet: WalletReq) {
+    async post(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Body() wallet: WalletReq) {
         const data = await this.walletService.create(wallet);
         return data ? RestfulRes.success(res, messages.wallets.created, data) : RestfulRes.error(res, messages.operationFailed);
     }
@@ -55,11 +57,10 @@ export class WalletController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN, UserEnum.CONSUMER)
-    @Get(':id/consumers/:cus_id')
+    @Get('consumers/:id')
     async fetchByConsumerId(@Response() res, @Headers('Authorization') authorization: string,
-                            @Param('id', new ParseIntPipe()) id: number,
-                            @Param('cus_id', new ParseIntPipe()) cusId: number) {
-        const data = await this.walletService.getWalletByConsumerId(cusId);
+                            @Param('id', new ParseIntPipe()) id: number) {
+        const data = await this.walletService.getWalletByConsumerId(id);
         return data ? RestfulRes.success(res, messages.wallets.one.success, data) : RestfulRes.error(res, messages.wallets.one.failed);
     }
 }

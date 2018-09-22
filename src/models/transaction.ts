@@ -8,4 +8,5 @@ export interface Transaction extends Document {
     readonly item_code: string;
     readonly status: string;
     readonly transaction_reference: string;
+    readonly payment_reference: string;
 }

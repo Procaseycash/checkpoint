@@ -13,6 +13,7 @@ const TransactionSchema = new mongoose.Schema({
         item_code: String,
         status: String,
         transaction_reference: String,
+        payment_reference: String,
     },
     {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}},
 );

@@ -1,7 +1,7 @@
 import {Component} from '@nestjs/common';
 import {
     catchErrors,
-    deepCopy,
+    deepCopy, generateKey,
     getEnums, getNextSequenceValue, password,
     sendMail,
 } from '../utils/utils';
@@ -9,7 +9,6 @@ import {MailEnum} from '../enums/mail.enum';
 import {UserEnum} from '../enums/user.enum';
 import {ENV} from '../env';
 import {EmailSettings} from '../config/mail.conf';
-import * as faker from 'faker';
 import {UserNotFoundException} from '../shared/filters/throwable.not.found';
 import {BadRequestException, forwardRef, Inject} from '@nestjs/common';
 import {messages} from '../config/messages.conf';
@@ -52,7 +51,7 @@ export class ServicesService {
 
     private async processToken(data) {
         data = deepCopy(data);
-        data['ref_token'] = faker.random.uuid() + new Date().getTime();
+        data['ref_token'] = generateKey().replace(/[^a-zA-Z0-9]/g, '').substring(0, 15);
         let userInfo = {};
         const repo: any = (data.type === UserEnum.CONSUMER) ? this.consumerRepo : (data.type === UserEnum.MERCHANT)
             ? this.merchantRepo : null;
@@ -110,7 +109,7 @@ export class ServicesService {
             user = await this.userRepo.findOne({email: value});
             if (!user) throw new UserNotFoundException();
         } else throw new BadRequestException(messages.noFound);
-        const pwd = 'CP@' + faker.random.uuid().substring(0, 8);
+        const pwd = 'CP@' + generateKey().substring(0, 6);
         user['password'] = pwd;
         const data = await this.userRepo.update({_id: user['id']}, {$set: {password: password.hash(pwd)}});
         if (!data['nModified']) throw new BadRequestException(messages.newPasswordGenFailed);
