@@ -14,6 +14,7 @@ import {WalletService} from "../services/wallet.service";
 import {TransactionService} from "../services/transaction.service";
 import {AuthorizationInterceptor} from "../shared/interceptors/authorization.interceptor";
 import {WalletController} from "../controllers/wallet.controller";
+import {LogService} from "../services/log.service";
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import {WalletController} from "../controllers/wallet.controller";
         WalletService,
         ServicesService,
         TransactionService,
+        LogService,
         HttpExceptionFilter,
         AuthorizationInterceptor,
         ReqInstanceInterceptor,
@@ -45,6 +47,7 @@ import {WalletController} from "../controllers/wallet.controller";
         HttpExceptionFilter,
         AuthorizationInterceptor,
         ServicesService,
+        LogService,
         TransactionService,
         DecodeEncryptedRequestInterceptor,
         ReqInstanceInterceptor,
