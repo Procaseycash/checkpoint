@@ -58,11 +58,12 @@ async function bootstrap() {
     console.log('engine=', Mail.getEngine(), 'port=', PORT);
     Swagger.configure();
     Swagger.setup(app);
-    if (cluster.isMaster) {
+/*    if (cluster.isMaster) {
         runClusters(cluster);
     } else {
         await app.listen(process.env.PORT || PORT);
-    }
+    }*/
+    await app.listen(process.env.PORT || PORT); // without clustering
     console.log(clc.yellowBright(`Application running on http://localhost:${process.env.PORT || PORT}/`));
 }
 

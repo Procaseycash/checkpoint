@@ -266,11 +266,10 @@ export const generateKey = () => {
 export const runClusters = (cluster) => {
 
     const numCPUs = cpus().length;
-    console.log(`This machine has ${numCPUs} CPUs but running a fork`);
-  /*  for (let i = 0; i < numCPUs; i++) {
+    console.log(`This machine has ${numCPUs} CPUs`);
+    for (let i = 0; i < numCPUs; i++) {
         cluster.fork();
-    }*/
-    cluster.fork();
+    }
     cluster.on('online', (worker) => {
         console.log(`Worker ${worker.process.pid} is online`);
     });

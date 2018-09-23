@@ -117,9 +117,11 @@ export class TravellerService {
         if (!endedDestination) endedDestination = {kilometer: 0}; // a tradeoff when error occured while calculating auto-location KM.
         currentCheckIn.gps_destination_location = destination;
         currentCheckIn.currency = CURRENCY;
-        const diffInKm = parseFloat(currentCheckIn.kilometer) - parseFloat(endedDestination.kilometer);
+        currentCheckIn.kilometer = parseFloat(currentCheckIn.kilometer);
+        endedDestination.kilometer = parseFloat(endedDestination.kilometer);
+        const diffInKm = currentCheckIn.kilometer - endedDestination.kilometer;
         currentCheckIn.kilometer = diffInKm > 10 ? currentCheckIn.kilometer - diffInKm + 10 : currentCheckIn.kilometer;
-        const percentageIncrease = (parseFloat(currentCheckIn.kilometer) * DEFAULT_PERCENTAGE) / DEFAULT_KILOMETER;
+        const percentageIncrease = (currentCheckIn.kilometer * DEFAULT_PERCENTAGE) / DEFAULT_KILOMETER;
         const increasePointValue = POINT_VALUE + (percentageIncrease / 100);
         currentCheckIn.point = parseFloat((POINT_VALUE + increasePointValue).toFixed(2)); // point is given
         currentCheckIn.amount = parseFloat((currentCheckIn.point / POINT_RATIO).toFixed(2)); // cash is given
