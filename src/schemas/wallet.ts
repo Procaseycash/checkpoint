@@ -8,6 +8,7 @@ const WalletSchema = new mongoose.Schema({
         _id: Number,
         wallet_no: Schema.Types.Mixed,
         amount: Schema.Types.Double,
+        point: Schema.Types.Double,
         traveller: {type: Number, ref: 'Traveller'},
         currency: Schema.Types.Mixed,
     },

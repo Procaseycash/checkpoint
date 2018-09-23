@@ -5,7 +5,7 @@ import {Model} from 'mongoose';
 import {Counter} from '../models/counter';
 import {ReqInstance} from '../shared/interceptors/req.instance';
 import {messages} from '../config/messages.conf';
-import {CURRENCY, modelCounter} from '../config/constants.conf';
+import {CURRENCY, modelCounter, POINT_RATIO} from '../config/constants.conf';
 import {MerchantService} from './merchant.service';
 
 @Component()
@@ -22,6 +22,7 @@ export class WalletService {
         const wallet = {
             _id: await getNextSequenceValue(this.counterRepo, modelCounter.wallet),
             ...amount,
+            point: amount.amount,
             traveller: ReqInstance.req.user.id,
             currency: CURRENCY,
             wallet_no,
@@ -32,7 +33,7 @@ export class WalletService {
     }
 
     public async update(wallet: { amount: number, id: number }) {
-        const data = await this.walletRepo.updateOne({_id: wallet.id}, {$set: {amount: wallet.amount}});
+        const data = await this.walletRepo.updateOne({_id: wallet.id}, {$set: {amount: wallet.amount, point: wallet.amount}});
         if (!data['nModified']) throw new BadRequestException(messages.unable);
         return await this.getWalletById(wallet.id);
     }
@@ -60,6 +61,7 @@ export class WalletService {
         const wallet = await this.walletRepo.findOne({traveller: payload.id});
         if (!wallet) return await this.create({amount: payload.amount});
         payload.amount +=  wallet.amount;
+        payload.amount = parseFloat(payload.amount.toFixed(2));
         payload.id = wallet._id;
         return await this.update(payload);
     }

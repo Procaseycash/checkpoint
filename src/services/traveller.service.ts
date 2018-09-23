@@ -90,7 +90,7 @@ export class TravellerService {
     public async findCurrentTrip() {
         return (await this.checkInLogRepo.find({traveller: ReqInstance.req.user.id}).populate('traveller')
             .sort({_id: -1}).limit(1).exec())[0];
-}
+    }
 
     public async findCurrentTripWithNoPopulate() {
         return (await this.checkInLogRepo.find({traveller: ReqInstance.req.user.id}).sort({_id: -1}).limit(1).exec())[0];
@@ -119,12 +119,16 @@ export class TravellerService {
         currentCheckIn.kilometer = diffInKm > 10 ? currentCheckIn.kilometer - diffInKm + 10 : currentCheckIn.kilometer;
         const percentageIncrease = (currentCheckIn.kilometer * DEFAULT_PERCENTAGE) / DEFAULT_KILOMETER;
         const increasePointValue = POINT_VALUE * (percentageIncrease / 100);
-        currentCheckIn.point = POINT_VALUE + increasePointValue; // point is given
-        currentCheckIn.amount = currentCheckIn.point / POINT_RATIO; // cash is given
+        console.log({increasePointValue, percentageIncrease});
+        let wallet = await this.walletService.getWalletByTravellerId(ReqInstance.req.user.id);
+        if (!wallet) wallet = deepCopy(wallet);
+        const point = (!wallet) ? POINT_VALUE + increasePointValue : increasePointValue; // point is given
         currentCheckIn.status = TripEnum.COMPLETED;
+        currentCheckIn.kilometer = currentCheckIn.kilometer.toFixed(2) + ' km';
         const verifyCheckInEnded = await this.findCurrentTripWithNoPopulate();
+        console.log({verifyCheckInEnded});
         if (verifyCheckInEnded.status !== TripEnum.COMPLETED)
-            await this.walletService.topUserWallet({amount: currentCheckIn.amount, id: ReqInstance.req.user.id});
+            await this.walletService.topUserWallet({amount: point, id: ReqInstance.req.user.id});
         return await this.updateTrip(currentCheckIn);
     }
 }

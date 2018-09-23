@@ -13,8 +13,6 @@ const CheckInLogSchema = new Schema({
     currency: Schema.Types.Mixed,
     kilometer: String,
     total_time: String,
-    point: Schema.Types.Double,
-    amount: Schema.Types.Double,
     status: String,
 }, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}});
 
