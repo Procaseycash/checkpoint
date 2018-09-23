@@ -3,7 +3,7 @@ import {ErrorLogEnum} from '../enums/error.log.enum';
 import {LogService} from '../services/log.service';
 
 const retry_strategy = (options) => {
-    console.log('redisOptions=', options);
+    // console.log('redisOptions=', options);
     if (options.error) {
         if (APP_ERROR_CODES.indexOf(options.error.code) === -1) {
             const logService = new LogService();

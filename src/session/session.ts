@@ -1,6 +1,5 @@
 import {FileStorage} from './file_storage';
 import * as redis from 'redis';
-import {APP_ENV} from '../config/app.config';
 import * as _ from 'lodash';
 import * as bluebird from 'bluebird';
 import {REDIS_CONFIG} from '../config/redis.config';
@@ -19,7 +18,7 @@ export class Session extends FileStorage {
         Session.redis.on('error', (err) => {
             console.log('Error Redis =', err);
         });
-        console.log('envSession=', APP_ENV, REDIS_CONFIG);
+        // console.log('envSession=', APP_ENV, REDIS_CONFIG);
         /*   if (APP_ENV === 'production' && false) {
                Session.redis.auth(REDIS_CONFIG['password']);
            }*/
