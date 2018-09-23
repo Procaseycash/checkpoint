@@ -11,6 +11,7 @@ import {Session} from '../../session/session';
 import {messages} from '../../config/messages.conf';
 import {LogoutEnum} from '../../enums/logout.enum';
 import {MerchantService} from "../../services/merchant.service";
+import {ReqInstance} from "./req.instance";
 
 @Interceptor()
 export class AuthorizationInterceptor implements NestInterceptor {
@@ -29,11 +30,12 @@ export class AuthorizationInterceptor implements NestInterceptor {
 
         if (dataOrRequest.headers.merchant_key) {
             const data = await this.merchantService.getMerchantByKey(dataOrRequest.headers.merchant_key);
+            ReqInstance.req.user = data;
             if (!data) throw new UnauthorizedException(messages.invalidMerchantKey);
         }
 
         if (dataOrRequest.headers.merchant_secret) {
-            await this.merchantService.decryptMerchantSecret({secret: dataOrRequest.headers.merchant_secret});
+            ReqInstance.req.user = await this.merchantService.decryptMerchantSecret({secret: dataOrRequest.headers.merchant_secret});
         }
 
         return stream$;

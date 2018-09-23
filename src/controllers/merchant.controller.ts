@@ -29,7 +29,7 @@ export class MerchantController {
     }
 
     @Post('generate-secret')
-    async generateSecret(@Response() res, @Request() req, @Body() merchant: MerchantSecreteReq) {
+    async generateSecret(@Response() res, @Headers('merchant_key') merchant_key: string, @Request() req, @Body() merchant: MerchantSecreteReq) {
         const data = await this.merchantService.generateMerchantSecret(merchant);
         return data ? RestfulRes.success(res, messages.generatedSecret, data) : RestfulRes.error(res, messages.operationFailed);
     }
