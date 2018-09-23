@@ -16,7 +16,7 @@ import {TripInitReq} from "../requests/trip.init.req";
 import {DistanceManager} from "../utils/distance.manager";
 import {TripEndReq} from "../requests/trip.end.req";
 import {TripEnum} from "../enums/TripEnum";
-import {CurrentLocationNotFound, UnknownTrip} from "../shared/filters/throwable.not.found";
+import {CurrentLocationNotFound, LocationNotFound, UnknownTrip} from "../shared/filters/throwable.not.found";
 import {WalletService} from "./wallet.service";
 import {messages} from "../config/messages.conf";
 
@@ -76,6 +76,7 @@ export class TravellerService {
 
     public async initTrip(data: TripInitReq) {
         const tripInfo = await DistanceManager.calculate(data.user_origin_location, data.user_destination_location);
+        if (!tripInfo) throw new LocationNotFound();
         Object.assign(data, tripInfo);
         data['status'] = TripEnum.ONGOING;
         const result = await this.logCheckInQuery(data); // log query here
@@ -110,10 +111,10 @@ export class TravellerService {
         let currentCheckIn = await this.findCurrentTripWithNoPopulate();
         if (!currentCheckIn) throw new UnknownTrip();
         currentCheckIn = deepCopy(currentCheckIn);
+        console.log({currentCheckIn});
         const destination = data.destination_latitude + ',' + data.destination_longitude;
-        const endedDestination = await DistanceManager.calculate(currentCheckIn.gps_origin_location, destination);
-        if (!endedDestination) throw new CurrentLocationNotFound();
-
+        let endedDestination = await DistanceManager.calculate(currentCheckIn.gps_origin_location, destination);
+        if (!endedDestination) endedDestination = {kilometer: 0}; // a tradeoff when error occured while calculating auto-location KM.
         currentCheckIn.gps_destination_location = destination;
         currentCheckIn.currency = CURRENCY;
         const diffInKm = parseFloat(currentCheckIn.kilometer) - parseFloat(endedDestination.kilometer);

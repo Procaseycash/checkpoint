@@ -157,7 +157,7 @@ $ npm run db:seed:undo
 ```
 
 ## DISTANCE MATRIX API_KEY
-Please change the API_KEY from `config/app.config.ts` to a paid version API_KEY as the one in use is limited but can run through the test. 
+Please change the API_KEY from `config/app.config.ts` to a paid version API_KEY as the one in use is limited. 
 
 ## Support
 

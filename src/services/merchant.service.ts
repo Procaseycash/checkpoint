@@ -1,4 +1,4 @@
-import {Component, Inject, UnauthorizedException} from '@nestjs/common';
+import {Component, Inject, NotAcceptableException, UnauthorizedException} from '@nestjs/common';
 import {Merchant} from '../models/merchant';
 import {generateKey, getOffsetAndCateria, getPaginated, password} from '../utils/utils';
 import {Model} from 'mongoose';
@@ -9,6 +9,7 @@ import {UserService} from './user.service';
 import {UserEnum} from '../enums/user.enum';
 import {ENCRYPTION} from '../utils/encryption';
 import {User} from '../models/user';
+import {messages} from "../config/messages.conf";
 
 
 @Component()
@@ -53,6 +54,7 @@ export class MerchantService {
         const data = await this.userRepo.findOne({email: merchant.email});
         if (!(data && data.email === merchant.email && password.verify(merchant.password, data.password))) throw new UnauthorizedException();
         const merchantData = await this.merchantRepo.findOne({email: merchant.email});
+        if (merchantData.merchant_key !== ReqInstance.req.user.merchant_key) throw new NotAcceptableException(messages.invalidMerchantKey);
         return ENCRYPTION.encode(merchantData);
     }
 
