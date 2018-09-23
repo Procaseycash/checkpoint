@@ -118,7 +118,7 @@ export class TravellerService {
         console.log({kilo: [currentCheckIn.kilometer, endedDestination.kilometer, diffInKm]});
         currentCheckIn.kilometer = diffInKm > 10 ? currentCheckIn.kilometer - diffInKm + 10 : currentCheckIn.kilometer;
         const percentageIncrease = (currentCheckIn.kilometer * DEFAULT_PERCENTAGE) / DEFAULT_KILOMETER;
-        const increasePointValue = POINT_VALUE + (percentageIncrease / 100);
+        const increasePointValue = POINT_VALUE * (percentageIncrease / 100);
         currentCheckIn.point = POINT_VALUE + increasePointValue; // point is given
         currentCheckIn.amount = currentCheckIn.point / POINT_RATIO; // cash is given
         currentCheckIn.status = TripEnum.COMPLETED;
