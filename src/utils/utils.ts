@@ -12,6 +12,7 @@ import * as mustache from 'mustache';
 import {EmailSettings} from '../config/mail.conf';
 import {WEB_URL} from '../config/app.config';
 import {ENCRYPTION} from "./encryption";
+import {cpus} from 'os';
 
 const mailFilePath = path.resolve(__dirname, '../public/views/mails');
 
@@ -256,4 +257,27 @@ export const getNextSequenceValue = async (repo, sequenceName) => {
 
 export const generateKey = () => {
     return ENCRYPTION.encode(faker.random.uuid + new Date().getTime()).substring(0, 30);
+};
+
+/**
+ * Run child processes for nestApp.
+ * @param cluster
+ */
+export const runClusters = (cluster) => {
+
+    const numCPUs = cpus().length;
+    console.log(`This machine has ${numCPUs} CPUs.`);
+    for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+
+    cluster.on('online', (worker) => {
+        console.log(`Worker ${worker.process.pid} is online`);
+    });
+
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(`Worker ${worker.process.pid} died with code: ${code} and signal: ${signal}`);
+        console.log('Starting a new worker...');
+        cluster.fork();
+    });
 };

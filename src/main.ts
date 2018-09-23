@@ -18,8 +18,10 @@ import {Session} from './session/session';
 import {ReqInstanceInterceptor} from './shared/interceptors/req.instance.interceptor';
 import {AuthorizationInterceptor} from './shared/interceptors/authorization.interceptor';
 import * as clc from 'cli-color';
-import {PaymentMethodEnum} from "./enums/payment.method.enum";
-import {MockPayment} from "./utils/mock.payment";
+import {PaymentMethodEnum} from './enums/payment.method.enum';
+import {MockPayment} from './utils/mock.payment';
+import * as cluster from 'cluster';
+import {runClusters} from "./utils/utils";
 
 const expressInstance = express();
 expressInstance.engine('html', consolidate.swig);
@@ -56,7 +58,11 @@ async function bootstrap() {
     console.log('engine=', Mail.getEngine(), 'port=', PORT);
     Swagger.configure();
     Swagger.setup(app);
-    await app.listen(process.env.PORT || PORT);
+    if (cluster.isMaster) {
+        runClusters(cluster);
+    } else {
+        await app.listen(process.env.PORT || PORT);
+    }
     console.log(clc.yellowBright(`Application running on http://localhost:${process.env.PORT || PORT}/`));
 }
 

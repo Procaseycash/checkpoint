@@ -36,7 +36,7 @@ export const ENV = {
         }
     },
     current: () => {
-        console.log('EnvCurrent=', process.env.NODE_ENV);
+        // console.log('EnvCurrent=', process.env.NODE_ENV);
         return (process.env.NODE_ENV) ? process.env.NODE_ENV.trim() : 'development';
     },
 };
