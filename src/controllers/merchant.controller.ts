@@ -28,10 +28,8 @@ export class MerchantController {
         return data ? RestfulRes.success(res, messages.users.created, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
-    @ApiOAuth2Auth()
-    @Roles(UserEnum.MERCHANT)
     @Post('generate-secret')
-    async generateSecret(@Response() res, @Headers('Authorization') authorization: string, @Request() req, @Body() merchant: MerchantSecreteReq) {
+    async generateSecret(@Response() res, @Request() req, @Body() merchant: MerchantSecreteReq) {
         const data = await this.merchantService.generateMerchantSecret(merchant);
         return data ? RestfulRes.success(res, messages.generatedSecret, data) : RestfulRes.error(res, messages.operationFailed);
     }
