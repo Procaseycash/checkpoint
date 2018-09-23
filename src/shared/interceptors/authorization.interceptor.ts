@@ -26,10 +26,10 @@ export class AuthorizationInterceptor implements NestInterceptor {
                 throw new UnauthorizedException(messages.sessionExpired);
             }
         }
-        
+
         if (dataOrRequest.headers.merchant_key) {
             const data = await this.merchantService.getMerchantByKey(dataOrRequest.headers.merchant_key);
-            if (!data) throw new NotAcceptableException(messages.invalidMerchantKey);
+            if (!data) throw new UnauthorizedException(messages.invalidMerchantKey);
         }
 
         if (dataOrRequest.headers.merchant_secret) {
