@@ -122,6 +122,9 @@ $ npm run start:prod
 ```
 
 ### DB Seeding After application is running
+
+All test account password for seeded data: Password@123
+
 ```bash
 # From app root Development
     
