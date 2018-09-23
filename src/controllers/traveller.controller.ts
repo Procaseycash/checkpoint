@@ -103,31 +103,32 @@ export class TravellerController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
-    @Post('init-trip')
+    @Post(':id/init-trip')
     @ApiOperation({title: 'Requires Traveller Auth Token'})
-    async initTrip(@Response() res, @Headers('Authorization') authorization: string,
+    async initTrip(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number,
                    @Body() tripPayload: TripInitReq) {
         const data = await this.travellerService.initTrip(tripPayload);
         return data ? RestfulRes.success(res, messages.tripOngoing, data) : RestfulRes.error(res, messages.tripFailedStart);
     }
 
-
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
-    @Post('end-trip')
-    @ApiOperation({title: 'Requires Traveller Auth Token'})
-    async endTrip(@Response() res, @Headers('Authorization') authorization: string,
+    @Post(':id/end-trip')
+    @ApiOperation({title: 'Requires Traveller Auth Token', description: 'If it is had to get latitude and longitude, supply CountryCode, CityName, Area in latitude and longitude'})
+    async endTrip(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number,
                   @Body() tripPayload: TripEndReq) {
         const data = await this.travellerService.endTrip(tripPayload);
         return data ? RestfulRes.success(res, messages.tripEnd, data) : RestfulRes.error(res, messages.tripFailedEnd);
     }
 
-/*    @ApiOAuth2Auth()
+    @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
-    @Get('current-trip')
-     @ApiOperation({title: 'Requires Traveller Auth Token'})
-    async currentTrip(@Response() res, @Request() req, @Headers('Authorization') authorization: string) {
+    @Get(':id/current-trip')
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
+    async currentTrip(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.travellerService.findCurrentTrip();
         return data ? RestfulRes.success(res, messages.currentTrip, data) : RestfulRes.error(res, messages.operationFailed);
-    }*/
+    }
+
+
 }
