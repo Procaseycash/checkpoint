@@ -56,6 +56,7 @@ export class MerchantController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.MERCHANT)
+    @ApiOperation({title: 'Requires Merchant Auth Token'})
     @Get(':id/transactions')
     async getTransactions(@Response() res,
                           @Param('id', new ParseIntPipe()) id: number,
