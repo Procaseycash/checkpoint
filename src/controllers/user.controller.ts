@@ -3,7 +3,7 @@ import {
     ParseIntPipe, Body, Put, Delete, Patch,
 } from '@nestjs/common';
 import {UserService} from '../services/user.service';
-import {ApiOAuth2Auth, ApiUseTags} from '@nestjs/swagger';
+import {ApiOAuth2Auth, ApiOperation, ApiUseTags} from '@nestjs/swagger';
 import {messages} from '../config/messages.conf';
 import {RestfulRes} from '../response/restful.res';
 import {ServicesService} from '../services/services.service';
@@ -21,6 +21,7 @@ export class UserController {
     }
 
     @ApiOAuth2Auth()
+    @ApiOperation({title: 'Requires Any kinds of user Auth Token and information must be of that of the token'})
     @Roles(UserEnum.MERCHANT, UserEnum.TRAVELLER, UserEnum.SYSADMIN)
     @Patch(':id/change_password')
     async changePassword(@Response() res, @Headers('Authorization') authorization: string, @Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() passwordSettings: ChangePasswordReq) {
@@ -37,6 +38,7 @@ export class UserController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN)
     @Get('/check-in-history')
+    @ApiOperation({title: 'Requires Sysadmin Auth Token, try Id=500 in auth/:id'})
     async findAllCheckIn(@Response() res, @Headers('Authorization') authorization: string, @Request() request) {
         const data = await this.travellerService.getCheckInHistory();
         return data ? RestfulRes.success(res, messages.history.list.success, data) : RestfulRes.error(res, messages.history.list.failed);

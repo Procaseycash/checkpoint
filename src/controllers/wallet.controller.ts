@@ -20,6 +20,7 @@ export class WalletController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     @Post()
     async post(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Body() wallet: WalletReq) {
         const data = await this.walletService.create(wallet);
@@ -28,6 +29,7 @@ export class WalletController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     @Put(':id')
     async update(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() wallet: WalletUpdateReq) {
         const data = await this.walletService.update(wallet);
@@ -42,6 +44,7 @@ export class WalletController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN)
+    @ApiOperation({title: 'Requires SysAdmin Auth Token,try id=500 in auth/:id'})
     @Delete(':id')
     async remove(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.walletService.remove(id);
@@ -50,6 +53,7 @@ export class WalletController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     @Get(':id')
     async fetch(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.walletService.getWalletById(id);
@@ -58,6 +62,7 @@ export class WalletController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     @Get('travellers/:id')
     async fetchByTravellerId(@Response() res, @Headers('Authorization') authorization: string,
                             @Param('id', new ParseIntPipe()) id: number) {
@@ -78,7 +83,7 @@ export class WalletController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
     @Get(':wallet_no/by-traveller')
-    @ApiOperation({title: 'This is used to get traveller wallet information'})
+    @ApiOperation({title: 'This is used to get traveller wallet information, requires traveller Auth Token'})
     async fetchWalletInfo(@Response() res, @Headers('Authorization') authorization: string,
                           @Param('wallet_no') wallet_no: string) {
         const data = await this.walletService.getByWalletNo(wallet_no);

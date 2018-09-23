@@ -33,7 +33,7 @@ export class TravellerController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
     @Put(':id')
-    @ApiOperation({title: 'Phone number is optional'})
+    @ApiOperation({title: 'Phone number is optional, requires Traveller Auth Token'})
     async update(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number, @Body() traveller: UserUpdateReq) {
         const data = await this.travellerService.update(traveller);
         return data ? RestfulRes.success(res, messages.users.updated, data) : RestfulRes.error(res, messages.operationFailed);
@@ -53,6 +53,7 @@ export class TravellerController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
     @Get(':id/check-in-history')
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     async findAllTravellerCheckIn(@Response() res, @Headers('Authorization') authorization: string, @Request() request, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.travellerService.getTravellerCheckInHistory();
         return data ? RestfulRes.success(res, messages.history.list.success, data) : RestfulRes.error(res, messages.history.list.failed);
@@ -61,6 +62,7 @@ export class TravellerController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN)
     @Delete(':id')
+    @ApiOperation({title: 'Requires SysAdmin Auth Token, try Id -500 in auth/:id'})
     async remove(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.travellerService.remove(id);
         return data ? RestfulRes.success(res, messages.deleteSuccess, data) : RestfulRes.error(res, messages.operationFailed);
@@ -70,6 +72,7 @@ export class TravellerController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
     @Get(':id/transactions')
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     async getTransactions(@Response() res,
                           @Param('id', new ParseIntPipe()) id: number,
                           @Headers('Authorization') authorization: string,
@@ -82,6 +85,7 @@ export class TravellerController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN, UserEnum.TRAVELLER)
     @Get(':id')
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     async fetchAUser(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.travellerService.getTravellerById(id);
         return data ? RestfulRes.success(res, messages.users.one.success, data) : RestfulRes.error(res, messages.users.one.failed);
@@ -89,6 +93,7 @@ export class TravellerController {
 
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     @Get(':id/wallets')
     async fetchByTravellerId(@Response() res, @Headers('Authorization') authorization: string,
                              @Param('id', new ParseIntPipe()) id: number) {
@@ -99,6 +104,7 @@ export class TravellerController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
     @Post('init-trip')
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     async initTrip(@Response() res, @Headers('Authorization') authorization: string,
                    @Body() tripPayload: TripInitReq) {
         const data = await this.travellerService.initTrip(tripPayload);
@@ -109,17 +115,19 @@ export class TravellerController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
     @Post('end-trip')
+    @ApiOperation({title: 'Requires Traveller Auth Token'})
     async endTrip(@Response() res, @Headers('Authorization') authorization: string,
                   @Body() tripPayload: TripEndReq) {
         const data = await this.travellerService.endTrip(tripPayload);
         return data ? RestfulRes.success(res, messages.tripEnd, data) : RestfulRes.error(res, messages.tripFailedEnd);
     }
 
-    @ApiOAuth2Auth()
+/*    @ApiOAuth2Auth()
     @Roles(UserEnum.TRAVELLER)
     @Get('current-trip')
-    async currentTrip(@Response() res, @Headers('Authorization') authorization: string) {
+     @ApiOperation({title: 'Requires Traveller Auth Token'})
+    async currentTrip(@Response() res, @Request() req, @Headers('Authorization') authorization: string) {
         const data = await this.travellerService.findCurrentTrip();
         return data ? RestfulRes.success(res, messages.currentTrip, data) : RestfulRes.error(res, messages.operationFailed);
-    }
+    }*/
 }

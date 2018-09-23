@@ -27,7 +27,7 @@ async function runSeeders() {
     await Merchant.create(MERCHANTS);
     await Traveller.create(TRAVELLERS);
     await User.create(USERS);
-    await Counter.create({_id: modelCounter.user, seq: USERS.length});
+    await Counter.create({_id: modelCounter.user, seq: USERS.length + 5});
     await Counter.create({_id: modelCounter.traveller, seq: TRAVELLERS.length});
     await Counter.create({_id: modelCounter.merchant, seq: MERCHANTS.length});
     console.log('Seeding successful, Thank you...');

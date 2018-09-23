@@ -88,17 +88,12 @@ export class TravellerService {
     }
 
     public async findCurrentTrip() {
-        return await this.checkInLogRepo.findOne({
-            $query: {traveller: ReqInstance.req.user.id},
-            $orderby: {_id: -1},
-        }).populate('traveller');
-    }
+        return (await this.checkInLogRepo.find({traveller: ReqInstance.req.user.id}).populate('traveller')
+            .sort({_id: -1}).limit(1).exec())[0];
+}
 
     public async findCurrentTripWithNoPopulate() {
-        return await this.checkInLogRepo.findOne({
-            $query: {traveller: ReqInstance.req.user.id},
-            $orderby: {_id: -1},
-        });
+        return (await this.checkInLogRepo.find({traveller: ReqInstance.req.user.id}).sort({_id: -1}).limit(1).exec())[0];
     }
 
     public async updateTrip(payload) {
@@ -114,17 +109,18 @@ export class TravellerService {
         console.log({currentCheckIn});
         const destination = data.destination_latitude + ',' + data.destination_longitude;
         let endedDestination = await DistanceManager.calculate(currentCheckIn.gps_origin_location, destination);
-        if (!endedDestination) endedDestination = {kilometer: 0}; // a tradeoff when error occured while calculating auto-location KM.
+        if (!endedDestination) endedDestination = {kilometer: '0 km', total_time: '0 min'}; // a tradeoff when error occured while calculating auto-location KM.
         currentCheckIn.gps_destination_location = destination;
         currentCheckIn.currency = CURRENCY;
         currentCheckIn.kilometer = parseFloat(currentCheckIn.kilometer);
         endedDestination.kilometer = parseFloat(endedDestination.kilometer);
         const diffInKm = currentCheckIn.kilometer - endedDestination.kilometer;
+        console.log({kilo: [currentCheckIn.kilometer, endedDestination.kilometer, diffInKm]});
         currentCheckIn.kilometer = diffInKm > 10 ? currentCheckIn.kilometer - diffInKm + 10 : currentCheckIn.kilometer;
         const percentageIncrease = (currentCheckIn.kilometer * DEFAULT_PERCENTAGE) / DEFAULT_KILOMETER;
         const increasePointValue = POINT_VALUE + (percentageIncrease / 100);
-        currentCheckIn.point = parseFloat((POINT_VALUE + increasePointValue).toFixed(2)); // point is given
-        currentCheckIn.amount = parseFloat((currentCheckIn.point / POINT_RATIO).toFixed(2)); // cash is given
+        currentCheckIn.point = POINT_VALUE + increasePointValue; // point is given
+        currentCheckIn.amount = currentCheckIn.point / POINT_RATIO; // cash is given
         currentCheckIn.status = TripEnum.COMPLETED;
         const verifyCheckInEnded = await this.findCurrentTripWithNoPopulate();
         if (verifyCheckInEnded.status !== TripEnum.COMPLETED)

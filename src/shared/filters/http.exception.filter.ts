@@ -11,8 +11,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     catch(exception: HttpException, @Response() response) {
-        const message = exception.getResponse(); // this.getMessage(exception.getResponse());
-        const statusCode = exception.getStatus();
+        const message = this.getMessage(exception.getResponse());
+        const statusCode = this.statusCode;
         console.log({statusCode, message});
         if (APP_ERROR_CODES.indexOf(statusCode) === -1) {
             this.logService.logError('APPLICATION_ERROR', exception.getResponse(), ErrorLogEnum.APPLICATION);

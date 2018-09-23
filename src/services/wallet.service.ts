@@ -1,6 +1,6 @@
 import {BadRequestException, Component, forwardRef, Inject} from '@nestjs/common';
 import {Wallet} from '../models/wallet';
-import {generateKey, getNextSequenceValue, getOffsetAndCateria, getPaginated} from '../utils/utils';
+import {deepCopy, generateKey, getNextSequenceValue, getOffsetAndCateria, getPaginated} from '../utils/utils';
 import {Model} from 'mongoose';
 import {Counter} from '../models/counter';
 import {ReqInstance} from '../shared/interceptors/req.instance';
@@ -56,9 +56,10 @@ export class WalletService {
     }
 
     async topUserWallet(payload: {amount: number, id: number}) {
+        console.log({payload});
         const wallet = await this.walletRepo.findOne({traveller: payload.id});
         if (!wallet) return await this.create({amount: payload.amount});
-        payload.amount += wallet.amount;
+        payload.amount +=  wallet.amount;
         payload.id = wallet._id;
         return await this.update(payload);
     }

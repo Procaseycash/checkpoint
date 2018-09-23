@@ -68,7 +68,7 @@ export class MerchantController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.MERCHANT)
     @Put(':id')
-    @ApiOperation({title: 'Phone number is optional'})
+    @ApiOperation({title: 'Phone number is optional, Requires Merchant Auth Token'})
     async update(@Response() res, @Request() req,
                  @Headers('Authorization') authorization: string,
                  @Param('id', new ParseIntPipe()) id: number, @Body() merchant: MerchantUpdateReq) {
@@ -90,6 +90,7 @@ export class MerchantController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN)
     @Delete(':id')
+    @ApiOperation({title: 'Requires SYSADMIN Auth Token; use id:500 in auth/:id'})
     async remove(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.merchantService.remove(id);
         return data ? RestfulRes.success(res, messages.deleteSuccess, data) : RestfulRes.error(res, messages.operationFailed);
@@ -98,6 +99,7 @@ export class MerchantController {
     @ApiOAuth2Auth()
     @Roles(UserEnum.SYSADMIN, UserEnum.MERCHANT)
     @Get(':id')
+    @ApiOperation({title: 'Requires Merchant Auth Token'})
     async fetchAUser(@Response() res, @Headers('Authorization') authorization: string, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.merchantService.getMerchantById(id);
         return data ? RestfulRes.success(res, messages.users.one.success, data) : RestfulRes.error(res, messages.users.one.failed);

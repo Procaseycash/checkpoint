@@ -1,4 +1,4 @@
-import {ApiOAuth2Auth, ApiUseTags} from '@nestjs/swagger';
+import {ApiOAuth2Auth, ApiOperation, ApiUseTags} from '@nestjs/swagger';
 import {ServicesService} from '../services/services.service';
 import {Body, Controller, Get, Headers, Post, Response, Request} from '@nestjs/common';
 import {RestfulRes} from '../response/restful.res';
@@ -23,6 +23,7 @@ export class ServicesController {
     }
 
     @ApiOAuth2Auth()
+    @ApiOperation({title: 'Requires any kinds user Auth Token '})
     @Roles(UserEnum.TRAVELLER, UserEnum.MERCHANT, UserEnum.SYSADMIN)
     @Post('account/logout')
     async logout(@Response() res, @Request() req, @Headers('Authorization') authorization: string, @Body() logoutReq: LogoutReq) {

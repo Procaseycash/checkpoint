@@ -1,12 +1,11 @@
-import {IsDefined, IsNumber, IsString, MaxLength, MinLength} from "class-validator";
+import {IsDefined, IsNumber, IsString, MaxLength, Min, MinLength} from "class-validator";
 import {ApiModelProperty} from "@nestjs/swagger";
 
 export class TransactionReq {
     @ApiModelProperty({description: 'Item Amount from Merchant terminal'})
-    @MinLength(10)
-    @MaxLength(10)
     @IsDefined()
     @IsNumber()
+    @Min(1)
     amount: number;
 
     @ApiModelProperty({description: 'Item Name from Merchant terminal'})
