@@ -26,7 +26,7 @@ export class AuthController {
     async getUserToken(@Response() res, @Request() req) {
         const data = await this.servicesService.getToken(+req.query.client_id);
         console.log('resp=', data);
-        return data ? RestfulRes.success(res, messages.auth.success, data) : RestfulRes.error(res, messages.auth.failed);
+        return data ? RestfulRes.success(res, messages.list, data) : RestfulRes.error(res, messages.operationFailed);
     }
 
     @Get(':id')
@@ -34,6 +34,6 @@ export class AuthController {
     async getUserTokenById(@Response() res, @Request() req, @Param('id', new ParseIntPipe()) id: number) {
         const data = await this.servicesService.getToken(id);
         console.log('resp=', data);
-        return data ? RestfulRes.success(res, messages.auth.success, data) : RestfulRes.error(res, messages.auth.failed);
+        return data ? RestfulRes.success(res, messages.list, data) : RestfulRes.error(res, messages.operationFailed);
     }
 }
