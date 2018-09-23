@@ -108,8 +108,8 @@ export class TravellerService {
         currentCheckIn = deepCopy(currentCheckIn);
         console.log({currentCheckIn});
         const destination = data.destination_latitude + ',' + data.destination_longitude;
-        let endedDestination: any = await DistanceManager.calculate(currentCheckIn.gps_origin_location, destination);
-        if (!endedDestination) endedDestination = {kilometer: '0 km', total_time: '0 min'}; // a tradeoff when error occured while calculating auto-location KM.
+        const endedDestination: any = await DistanceManager.calculate(currentCheckIn.gps_origin_location, destination);
+        if (!endedDestination) throw new CurrentLocationNotFound();
         currentCheckIn.gps_destination_location = destination;
         currentCheckIn.currency = CURRENCY;
         currentCheckIn.kilometer = parseFloat(currentCheckIn.kilometer);
