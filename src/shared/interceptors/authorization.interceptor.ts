@@ -1,4 +1,7 @@
-import {Interceptor, NestInterceptor, ExecutionContext, UnauthorizedException} from '@nestjs/common';
+import {
+    Interceptor, NestInterceptor, ExecutionContext, UnauthorizedException,
+    NotAcceptableException
+} from '@nestjs/common';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -7,10 +10,11 @@ import {jwt} from '../../utils/jwt';
 import {Session} from '../../session/session';
 import {messages} from '../../config/messages.conf';
 import {LogoutEnum} from '../../enums/logout.enum';
+import {MerchantService} from "../../services/merchant.service";
 
 @Interceptor()
 export class AuthorizationInterceptor implements NestInterceptor {
-    constructor(private readonly servicesService: ServicesService) {
+    constructor(private readonly merchantService: MerchantService, private readonly servicesService: ServicesService) {
     }
 
     async intercept(dataOrRequest, context: ExecutionContext, stream$: Observable<any>): Promise<Observable<any>> {
@@ -22,6 +26,16 @@ export class AuthorizationInterceptor implements NestInterceptor {
                 throw new UnauthorizedException(messages.sessionExpired);
             }
         }
+        
+        if (dataOrRequest.headers.merchant_key) {
+            const data = await this.merchantService.getMerchantByKey(dataOrRequest.headers.merchant_key);
+            if (!data) throw new NotAcceptableException(messages.invalidMerchantKey);
+        }
+
+        if (dataOrRequest.headers.merchant_secret) {
+            await this.merchantService.decryptMerchantSecret({secret: dataOrRequest.headers.merchant_secret});
+        }
+
         return stream$;
     }
 }

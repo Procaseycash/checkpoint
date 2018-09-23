@@ -29,6 +29,7 @@ export class TransactionService {
         const merchantSecret = ENCRYPTION.decode(ReqInstance.req.headers.merchant_secret);
         const validateMerchant = await this.merchantService.validateMerchant(merchantSecret);
         if (!validateMerchant) throw new BadRequestException(messages.merchantSecretInValid);
+        if (merchantSecret.merchant_key !== ReqInstance.req.headers.merchant_key) throw new BadRequestException(messages.invalidMerchantKey);
         const storeInitTransaction = await this.create(payload);
         if (!storeInitTransaction) throw new TransactionFailure();
         merchantSecret.merchant_secret = undefined;

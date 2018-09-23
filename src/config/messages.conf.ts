@@ -1,5 +1,6 @@
 export const messages = {
     invalidURL: 'Invalid URL',
+    invalidMerchantKey: 'Invalid Merchant Key',
     tripFailedEnd: 'Unable to end Trip, Please try again.',
     tripFailedStart: 'Unable to Start Trip, Please use proper location',
     tripOngoing: 'Trip has been initiated. Do not end trip until you get to your arrival to earn you point.',
