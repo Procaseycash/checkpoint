@@ -1,17 +1,16 @@
 import * as faker from 'faker';
-import {generateKey, password} from '../utils/utils';
+import {generateKey} from '../utils/utils';
 import {SEED_LENGTH} from "../config/app.config";
 
 const MERCHANTS = [];
 for (let i = 0; i < SEED_LENGTH; i++) {
     MERCHANTS.push({
         _id: i + 1,
-        password: password.hash('password'),
         first_name: faker.name.firstName(),
         last_name: faker.name.lastName(),
         phone_no: faker.phone.phoneNumber(),
         account_no: faker.finance.account(),
-        account_name: faker.finance().accountName(),
+        account_name: faker.finance.accountName(),
         bank_code: faker.company.catchPhrase(),
         bank_name: faker.company.companyName(),
         merchant_key: generateKey(),

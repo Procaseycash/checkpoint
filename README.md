@@ -25,7 +25,45 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## ANSWERS TO TEST 0 
+1. Tell us how you will approach this problem?
+
+    The approach I will use is `3-tier architecture` such that each users can actually make use of their resources to process client end activities and the backend focuses on request to act on (running as a service and stateless).
+    
+    Also, I will make sure the structure is `modular ` and so that resources can be reuse efficiently. I will also put in check `request size` that will be required is minimal in terms of what output the application will give and I will make sure the application can `run in parallel` that is able create child clusters to enable concurrency.
+
+
+2.  Explain to us what data points you need to track?
+
+       I will consider the following in tracking the data points of the application.
+      <br>    
+      a) <b>Performance:</b> I will consider the API latency which the request to a response round trip considering the level of users. I will also end to end communication either backend to backend communication or backend end to database communication, so I will work my way to make sure this communication are handled in a lighter way to reduce the response time to the client end application.
+      
+      b) <b>User Engagement:</b> As for the traveller which are the major users, I will check the location starting point to end point, the time interval to get to destination. Also I will compare the auto location dictator to user define location for start and end point. that way I will be able to know if the system is being cheated or game by the user. I will also consider the user session interval and session length. I will also log every trip taken by the user for data mining to aid analysing the system better. <br>. The point value and amount earn is also considered such that we auto-create a wallet system for the traveller to enable him/her see her point score and worth. <br>
+      As for the merchant, I will make sure a merchant information exchange must be verify using the generated Merchant Key and Validating there username&password to enable generation of a merchant secret aside JWT. 
+    
+      c) <b>Security: </b> I will also consider the authentication to be put in place to avoid system mess up. I will make sensitive information are encrypted between the client system and the backend system, by this means, there will be public and private key measures between secret informations between the system. 
+      
+      d) <b>Errors: </b> I will also make sure errors are handled and respond are given in a special format and I will put in place a system to track all kinds of errors that might occur in the system to aid in fixing and maintaining the system better.
+
+3.  what authorization process you will put in place to ensure people don’t game the system?: The system uses JWT as authorization mechanism and requires subsequent resend of this token to verify as Authorization in header of the request. <br>
+To avoid being game by user. We also make use of a Role Based system and a single entry point login system to avoid multiple emails of same type in different part of the system.
+<br><br>Also, we put in check User Defined Location to Auto-Location Detector mechanism such that for every check-in. we calculate the difference in terms of Kilometer covered and benchmark the result against 10KM to determine an increase in point. So, we concluded that if the difference is above the 10KM threshold, We deduct the excessive KM before processing the value point increase and amount. 
+
+4. How will you architect the system to be able to handle 10,000 request per second?: We will make it a microservice architecture and create child processes to run the application in parallel for request throughput to increase.
+
+5. What will you refine if the checkin surges to 100,000 per second base on a popular event at a location?
+
+    I will do the followings:
+    
+    a) Increase the server specs.
+    
+    b) Load balance both Hard and Soft load balance to create multiple entry points to the application.
+    
+    c) I will also review Answer to question 4 to enhance throughput. 
+
+
+## APP Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 

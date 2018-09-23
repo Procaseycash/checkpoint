@@ -7,6 +7,8 @@ import {modelCounter} from '../config/constants.conf';
 import LoginInfoSchema from '../schemas/login_info';
 import MERCHANTS from "./merchant-seed";
 import TRAVELLERS from "./traveller-seed";
+import MerchantSchema from "../schemas/merchant";
+import TravellerSchema from "../schemas/traveller";
 
 const connect = async () => await databaseRepository[0].useFactory();
 let User = null, LoginInfo = null, Counter = null, Merchant = null, Traveller = null;
@@ -16,8 +18,8 @@ async function models() {
     User = mongoose.model('User', UserSchema);
     Counter = mongoose.model('Counter', CounterSchema);
     LoginInfo = mongoose.model('LoginInfo', LoginInfoSchema);
-    Merchant = mongoose.model('Merchant', LoginInfoSchema);
-    Traveller = mongoose.model('Traveller', LoginInfoSchema);
+    Merchant = mongoose.model('Merchant', MerchantSchema);
+    Traveller = mongoose.model('Traveller', TravellerSchema);
 }
 
 async function runSeeders() {

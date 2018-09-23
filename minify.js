@@ -21,7 +21,7 @@ let processMinifier = function (file, folder) {
 
 let indepthFileProcess = function(newPath, checkFolder) {
   const currentPath = newPath + checkFolder;
-  console.log({currentPath: currentPath});
+  // console.log({currentPath: currentPath});
   let file = '';
   const files = jetpack.list(path.join(__dirname, 'dist/' + currentPath));
   // console.log('\n files=', files.toString());
